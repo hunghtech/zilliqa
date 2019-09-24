@@ -1,0 +1,19 @@
+1.0.1: 'First version of Backend'
+1.0.2:
+    - 'Created table zilliqa_backend_lending_package'
+    - builder_table_create_zilliqa_backend_lending_package.php
+1.0.3:
+    - 'Created table zilliqa_backend_history_deposit'
+    - builder_table_create_zilliqa_backend_history_deposit.php
+1.0.4:
+    - 'Created table zilliqa_backend_history_with_draw'
+    - builder_table_create_zilliqa_backend_history_with_draw.php
+1.0.5:
+    - 'Created table zilliqa_backend_user_lending'
+    - builder_table_create_zilliqa_backend_user_lending.php
+1.0.6:
+    - 'Updated table zilliqa_backend_history_with_draw'
+    - builder_table_update_zilliqa_backend_history_with_draw.php
+1.0.7:
+    - 'Created table zilliqa_backend_presenter'
+    - builder_table_create_zilliqa_backend_presenter.php
