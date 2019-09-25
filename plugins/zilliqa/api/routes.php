@@ -1,0 +1,25 @@
+<?php
+
+Route::group([
+    'middleware' => ['web'],
+    'version' => 'v1',
+    'prefix' => Config::get('cms.apiUri')
+        ], function () {
+    //API for User
+    Route::prefix('user')->group(function () {
+        Route::post('login', 'Zilliqa\Api\Controllers\User@login');
+        Route::post('signup', 'Zilliqa\Api\Controllers\User@signup');
+        Route::post('forgotPassword', 'Zilliqa\Api\Controllers\User@forgotPassword');
+        Route::post('resetPassword', 'Zilliqa\Api\Controllers\User@resetPassword');
+    });
+    
+    Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('user')->group(function () {
+        Route::post('changePassword', 'Zilliqa\Api\Controllers\User@changePassword')->name('user.changePassword');
+        Route::get('logout', 'Zilliqa\Api\Controllers\User@logout')->name('user.logOut');
+        Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
+    });
+    Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {        
+        Route::get('/', 'Zilliqa\Api\Controllers\Lending@listAll')->name('lending.list');        
+
+    });
+});

@@ -1,0 +1,40 @@
+fields:
+    user_id:
+        label: User
+        showSearch: true
+        span: auto
+        type: dropdown
+    coint:
+        label: Coint
+        span: auto
+        type: dropdown
+        options:
+            ZIL: ZIL
+            BTC: BTC            
+    amount:
+        label: Amount
+        span: auto
+        type: number
+    status:
+        label: Status
+        showSearch: true
+        span: auto
+        type: dropdown
+        options:
+            0: Failed
+            1: Processing
+            2: Completed
+    type:
+        label: Type
+        showSearch: true
+        span: auto
+        type: dropdown
+        options:            
+            1: ZIL
+            2: Daily
+            3: Commission
+    created_at:
+        label: 'Created Date'
+        mode: datetime
+        span: auto
+        type: datepicker

@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: With Draw
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/historywithdraw/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\HistoryWithDraw
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/withdraw
+
+# Create page
+create:
+    title: Create With Draw
+    redirect: zilliqa/backend/withdraw/update/:id
+    redirectClose: zilliqa/backend/withdraw
+
+# Update page
+update:
+    title: Edit With Draw
+    redirect: zilliqa/backend/withdraw
+    redirectClose: zilliqa/backend/withdraw
+
+# Preview page
+preview:
+    title: Preview With Draw

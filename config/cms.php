@@ -37,6 +37,18 @@ return [
     */
 
     'backendUri' => 'backend',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Api URI prefix
+    |--------------------------------------------------------------------------
+    |
+    | Specifies the URL name used for accessing back-end pages.
+    | For example: backend -> http://localhost/backend
+    |
+    */
+
+    'apiUri' => 'api/v1',
 
     /*
     |--------------------------------------------------------------------------

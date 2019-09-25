@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Lending
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/lending/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\Lending
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/lending
+
+# Create page
+create:
+    title: Create Lending
+    redirect: zilliqa/backend/lending/update/:id
+    redirectClose: zilliqa/backend/lending
+
+# Update page
+update:
+    title: Edit Lending
+    redirect: zilliqa/backend/lending
+    redirectClose: zilliqa/backend/lending
+
+# Preview page
+preview:
+    title: Preview Lending

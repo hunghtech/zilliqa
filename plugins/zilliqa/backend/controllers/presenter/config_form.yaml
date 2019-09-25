@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Presenter
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/presenter/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\Presenter
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/presenter
+
+# Create page
+create:
+    title: Create Presenter
+    redirect: zilliqa/backend/presenter/update/:id
+    redirectClose: zilliqa/backend/presenter
+
+# Update page
+update:
+    title: Edit Presenter
+    redirect: zilliqa/backend/presenter
+    redirectClose: zilliqa/backend/presenter
+
+# Preview page
+preview:
+    title: Preview Presenter

@@ -1,0 +1,26 @@
+columns:
+    id:
+        label: id
+        type: number
+    user_id:
+        label: User
+        type: select
+        searchable: true
+        sortable: true
+        select: name
+        relation: user
+    coint:
+        label: Coint
+        type: text
+    amount:
+        label: Amount
+        type: text
+    status:
+        label: Status
+        type: number
+    created_at:
+        label: created_at
+        type: datetime
+    type:
+        label: Type
+        type: number

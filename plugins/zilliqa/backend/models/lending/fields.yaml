@@ -1,0 +1,27 @@
+fields:
+    title:
+        label: Package
+        span: auto
+        type: text
+    rate:
+        label: 'Rate (%/month)'
+        span: auto
+        type: text
+    bonus_zil:
+        label: 'Bonus (ZIL)'
+        span: auto
+        type: text
+    zil_address:
+        label: 'ZIL Address'
+        span: auto
+        type: text
+    qr_code:
+        label: 'QR Code'
+        mode: image
+        span: auto
+        type: mediafinder
+    content:
+        label: Content
+        size: huge
+        span: auto
+        type: textarea

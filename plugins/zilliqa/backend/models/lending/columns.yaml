@@ -1,0 +1,19 @@
+columns:
+    id:
+        label: id
+        type: number
+    title:
+        label: title
+        type: text
+    rate:
+        label: rate
+        type: text
+    bonus_zil:
+        label: bonus_zil
+        type: text
+    zil_address:
+        label: zil_address
+        type: text
+    created_at:
+        label: created_at
+        type: datetime

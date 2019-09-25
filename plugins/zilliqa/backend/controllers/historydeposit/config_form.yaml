@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: History Deposit
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/historydeposit/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\HistoryDeposit
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/historydeposit
+
+# Create page
+create:
+    title: Create History Deposit
+    redirect: zilliqa/backend/historydeposit/update/:id
+    redirectClose: zilliqa/backend/historydeposit
+
+# Update page
+update:
+    title: Edit History Deposit
+    redirect: zilliqa/backend/historydeposit
+    redirectClose: zilliqa/backend/historydeposit
+
+# Preview page
+preview:
+    title: Preview History Deposit
