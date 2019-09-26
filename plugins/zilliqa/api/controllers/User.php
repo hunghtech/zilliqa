@@ -110,9 +110,14 @@ class User extends General {
                 //Add User Commission
                 $presenter = $this->userRepository->where('user_code', $userCode)->first()->toArray();
                 $presenterID = $presenter['id'];
+                $parentPresent = 0;                
 
+                $data = $this->presenterRepository->where('user_present',$presenterID)->first();
+                if($data){
+                    $parentPresent = $data->parent_present;
+                }
                 $arrPresenter = [
-                   'user_id' => $userModel->id, 'user_present' => $presenterID
+                   'user_id' => $userModel->id, 'user_present' => $presenterID,'parent_present' => $parentPresent
                 ];
                 $this->presenterRepository->create($arrPresenter);
 

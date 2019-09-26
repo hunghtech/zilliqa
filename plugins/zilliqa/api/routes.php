@@ -20,6 +20,16 @@ Route::group([
     });
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {        
         Route::get('/', 'Zilliqa\Api\Controllers\Lending@listAll')->name('lending.list');        
-
+        Route::get('/subscription', 'Zilliqa\Api\Controllers\Lending@subscription')->name('lending.subscription');        
     });
+    
+    Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('history')->group(function () {        
+        Route::post('/deposit', 'Zilliqa\Api\Controllers\Lending@historyDeposit')->name('historyDeposit.list');        
+        Route::post('/with-draw', 'Zilliqa\Api\Controllers\Lending@historyWithDraw')->name('historyWithDraw.list');        
+    });
+    
+    Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('business')->group(function () {                
+        Route::get('/subscription', 'Zilliqa\Api\Controllers\Lending@subscription')->name('business.subscription');        
+    });
+    
 });

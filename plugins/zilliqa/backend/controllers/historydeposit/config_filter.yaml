@@ -1,0 +1,29 @@
+# ===================================
+# Filter Scope Definitions
+# ===================================
+
+scopes:
+    user_id:
+        label: User
+        modelClass: RainLab\User\Models\User
+        conditions: user_id in (:filtered)
+        nameFrom: name    
+    status:
+        label: Status
+        type: group
+        conditions: status in (:filtered)
+        options:
+           0: Failed
+           1: Processing
+           2: Completed 
+    coint:
+        label: Coint
+        type: group
+        conditions: coint in (:filtered)
+        options:
+           ZIL: ZIL
+           BTC: BTC         
+    created_at:
+        label: Created Date
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'           

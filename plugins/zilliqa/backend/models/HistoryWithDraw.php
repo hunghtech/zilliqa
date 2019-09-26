@@ -38,4 +38,39 @@ class HistoryWithDraw extends Model
         $users = User::lists('name', 'id');
         return $users;
     }
+    
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAllFilter(Request $request)
+    {
+        $perPage = $request->get('limit', 10);
+        
+        //Initialize param for product filter
+        $userID = $request->user_id;
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $type = $request->type;
+
+        $depositModel = $this->whereNull('deleted_at');
+        $depositModel->when($userID, function($query, $userID) {
+            return $query->where('user_id', $userID);
+        });
+        
+        $depositModel->when($type, function($query, $type) {
+            return $query->where('type', $type);
+        });
+        
+        
+        $depositModel->when($fromDate, $toDate, function($query, $fromDate, $toDate) {
+            return $query->whereBetween('reservation_from', [$fromDate, $toDate]);
+        });
+                       
+        $depositModel->orderBy('id', 'desc');
+
+        $result = $depositModel->paginate($perPage)->toArray();
+
+        return $result;
+    }
 }
