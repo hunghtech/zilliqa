@@ -1,0 +1,13 @@
+fields:
+    country_code:
+        label: Code
+        span: auto
+        type: text
+    name:
+        label: 'Quốc Gia'
+        span: auto
+        type: text
+    phonecode:
+        label: 'Mã Vùng'
+        span: auto
+        type: text

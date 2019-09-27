@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Country
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/country/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\Country
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/country
+
+# Create page
+create:
+    title: Create Country
+    redirect: zilliqa/backend/country/update/:id
+    redirectClose: zilliqa/backend/country
+
+# Update page
+update:
+    title: Edit Country
+    redirect: zilliqa/backend/country
+    redirectClose: zilliqa/backend/country
+
+# Preview page
+preview:
+    title: Preview Country

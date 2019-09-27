@@ -5,6 +5,7 @@ namespace Zilliqa\Backend;
 use Backend;
 use System\Classes\PluginBase;
 use BackendMenu;
+use Event;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Controllers\Users as UserController;
 
@@ -46,6 +47,7 @@ class Plugin extends PluginBase {
         UserModel::extend(function($model) {
             $model->hasMany['deposit'] = ['\Zilliqa\Backend\Models\HistoryDeposit', 'key' => 'user_id'];
             $model->hasMany['withdraw'] = ['\Zilliqa\Backend\Models\HistoryWithDraw', 'key' => 'user_id'];                        
+            $model->belongsTo['country'] = ['\Zilliqa\Backend\Models\Country', 'key' => 'country_id'];                        
         });
         
         //Extend Form Fields
@@ -57,7 +59,68 @@ class Plugin extends PluginBase {
 
             if (!$model->exists)
                 return;
-
+            
+            
+            $form->addTabFields([
+                'is_block' => [
+                    'label' => 'Block user',
+                    'type' => 'switch',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',                    
+                ],
+                'country_id' => [
+                    'label' => 'Country',
+                    'type' => 'dropdown',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',                    
+                ],
+            ]);
+            
+            $form->addTabFields([
+                'zil_address' => [
+                    'label' => 'Zil Address',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'eth_address' => [
+                    'label' => 'Eth Address',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'daily' => [
+                    'label' => 'Daily',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'commission' => [
+                    'label' => 'Commission',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'lending' => [
+                    'label' => 'Lending',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'zilliqa' => [
+                    'label' => 'Zilliqa',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ],
+                'downline_member' => [
+                    'label' => 'Downline Member',
+                    'type' => 'text',
+                    'tab' => 'Zilliqa',
+                    'span' => 'auto',                    
+                ]
+            ]);
+            
             //Add tab fields
             $form->addTabFields([
                 'deposit' => [
@@ -74,6 +137,44 @@ class Plugin extends PluginBase {
                 ]
             ]);
             
+        });
+        
+         Event::listen('backend.list.extendColumns', function($widget) {
+
+            // Only for the User controller
+            if (!$widget->getController() instanceof \RainLab\User\Controllers\Users) {
+                return;
+            }
+
+            // Only for the User model
+            if (!$widget->model instanceof \RainLab\User\Models\User) {
+                return;
+            }
+
+            // Add an extra birthday column
+            $widget->addColumns([
+                'zil_address' => [
+                    'label' => 'ZIL Address'
+                ],
+                'eth_address' => [
+                    'label' => 'ETH Address'
+                ],
+                'daily' => [
+                    'label' => 'Daily'
+                ],
+                'commission' => [
+                    'label' => 'Commission'
+                ],
+                'lending' => [
+                    'label' => 'Lending'
+                ],
+                'zilliqa' => [
+                    'label' => 'Zilliqa'
+                ]
+            ]);
+
+            // Remove a Surname column
+            $widget->removeColumn('surname');
         });
         
         UserModel::saving(function($model) {
@@ -131,6 +232,13 @@ class Plugin extends PluginBase {
                         'label' => 'Lending Package',
                         'icon' => 'icon-sitemap',
                         'url' => Backend::url('zilliqa/backend/lending'),
+                        'permissions' => ['zilliqa.backend.*'],
+                        'group' => 'Zilliqa',
+                    ],
+                    'country' => [
+                        'label' => 'Country',
+                        'icon' => 'icon-sitemap',
+                        'url' => Backend::url('zilliqa/backend/country'),
                         'permissions' => ['zilliqa.backend.*'],
                         'group' => 'Zilliqa',
                     ],

@@ -7,6 +7,7 @@ use Event;
 use October\Rain\Auth\Models\User as UserBase;
 use RainLab\User\Models\Settings as UserSettings;
 use October\Rain\Auth\AuthException;
+use Zilliqa\Backend\Models\Country;
 
 class User extends UserBase
 {
@@ -445,5 +446,10 @@ class User extends UserBase
     protected function generatePassword()
     {
         $this->password = $this->password_confirmation = Str::random(static::getMinPasswordLength());
+    }
+    
+    public function getCountryIdOptions() {
+        $countries = Country::lists('name', 'id');
+        return $countries;
     }
 }

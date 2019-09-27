@@ -1,0 +1,10 @@
+columns:
+    country_code:
+        label: country_code
+        type: text
+    name:
+        label: name
+        type: text
+    phonecode:
+        label: phonecode
+        type: number

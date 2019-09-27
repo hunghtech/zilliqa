@@ -17,3 +17,6 @@
 1.0.7:
     - 'Created table zilliqa_backend_presenter'
     - builder_table_create_zilliqa_backend_presenter.php
+1.0.8:
+    - 'Created table zilliqa_backend_countries'
+    - builder_table_create_zilliqa_backend_countries.php

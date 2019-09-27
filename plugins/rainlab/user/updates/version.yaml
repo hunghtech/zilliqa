@@ -71,3 +71,6 @@
 1.5.1:
     - Users Add user code, info zil address.
     - users_add_user_code.php
+1.5.2:
+    - Users Add country id, is_block
+    - users_add_country_id.php

@@ -10,6 +10,7 @@ use Rainlab\User\Models\UserGroup;
 use JWTAuth;
 use Zilliqa\Api\Repository\UserExtendRepository;
 use Zilliqa\Backend\Models\Presenter;
+use Zilliqa\Backend\Models\Country;
 use Lang;
 
 /**
@@ -20,13 +21,15 @@ class User extends General {
     protected $userRepository,
             $token, $userGroupRepository,
             $presenterRepository,
+            $countryRepository,
             $userExtendRepository;
 
-    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserExtendRepository $userExtend) {
+    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserExtendRepository $userExtend, Country $country) {
         $this->userRepository = $user;
         $this->userGroupRepository = $userGroup;
         $this->presenterRepository = $presenter;
         $this->userExtendRepository = $userExtend;
+        $this->countryRepository = $country;
         $this->token = JWTAuth::getToken();
     }
 
@@ -258,6 +261,20 @@ class User extends General {
             }
         } catch (Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listCountry() {
+        try {
+            $countryList = $this->countryRepository->get();
+
+            return $this->respondWithData($countryList);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
 

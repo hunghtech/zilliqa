@@ -11,12 +11,13 @@ Route::group([
         Route::post('signup', 'Zilliqa\Api\Controllers\User@signup');
         Route::post('forgotPassword', 'Zilliqa\Api\Controllers\User@forgotPassword');
         Route::post('resetPassword', 'Zilliqa\Api\Controllers\User@resetPassword');
+        Route::get('country', 'Zilliqa\Api\Controllers\User@listCountry')->name('user.listCountry');
     });
     
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('user')->group(function () {
         Route::post('changePassword', 'Zilliqa\Api\Controllers\User@changePassword')->name('user.changePassword');
         Route::get('logout', 'Zilliqa\Api\Controllers\User@logout')->name('user.logOut');
-        Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
+        Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');        
     });
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {        
         Route::get('/', 'Zilliqa\Api\Controllers\Lending@listAll')->name('lending.list');        
