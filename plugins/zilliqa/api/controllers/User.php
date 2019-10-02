@@ -242,7 +242,8 @@ class User extends General {
             $validator = Validator::make($data, [
                         'username' => 'required|string',
                         'email' => 'required|string|email',
-                        'user_id' => 'required'
+                        'zil_address' => 'required',
+                        'eth_address' => 'required',
             ]);
             if ($validator->fails()) {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
@@ -255,7 +256,7 @@ class User extends General {
                 if (!empty($password)) {
                     $user->fill($request->all(['username', 'email', 'password', 'password_confirmation']));
                 } else {
-                    $user->fill($request->all(['username', 'email']));
+                    $user->fill($request->all(['username', 'email','zil_address','eth_address']));
                 }
 
                 $user->save();

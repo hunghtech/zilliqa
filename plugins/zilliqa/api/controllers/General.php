@@ -5,7 +5,7 @@ namespace Zilliqa\Api\Controllers;
 use \Illuminate\Routing\Controller;
 use Mail;
 use PHPExcel_IOFactory;
-use Abbott\Backend\Models\Setting;
+use Zilliqa\Backend\Models\Setting;
 use RainLab\User\Models\User AS UserModel;
 use RainLab\User\Models\UserGroup;
 use Illuminate\Http\Response;

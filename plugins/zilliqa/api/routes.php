@@ -38,6 +38,7 @@ Route::group([
 
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('business')->group(function () {
         Route::get('/subscription', 'Zilliqa\Api\Controllers\Lending@subscription')->name('business.subscription');
+        Route::get('/price-eth', 'Zilliqa\Api\Controllers\Lending@getPriceETH')->name('business.getPriceETH');
     });
 
 

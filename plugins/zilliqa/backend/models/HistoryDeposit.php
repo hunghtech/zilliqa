@@ -88,7 +88,7 @@ class HistoryDeposit extends Model {
                 $presenter->business_volume = $presenter->business_volume +  $commission;
                 $presenter->save();
 
-                
+
                 $user = User::find($presenterID);
                 $user->commission = $user->commission + $commission;
                 $user->save();
