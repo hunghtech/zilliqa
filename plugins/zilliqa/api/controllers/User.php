@@ -40,6 +40,7 @@ class User extends General {
      */
     public function login(Request $request) {
         try {
+            $now = date('Y-m-d H:i:s');            
             $username = $request->get('username');
             $password = $request->get('password');
             $credentials = $request->only('username', 'password');
@@ -53,11 +54,13 @@ class User extends General {
                 }
                 if (Hash::check($password, $user->password)) {
                     $userModel = JWTAuth::authenticate($token);
+                    $user->last_login = $now;
+                    $user->save();
                     if ($userModel->methodExists('getAuthApiSigninAttributes')) {
                         $user = $userModel->getAuthApiSigninAttributes();
                     } else {
                         $user->token = JWTAuth::fromUser($user);
-                    }
+                    }                    
                     return $this->respondWithData($user);
                 } else {
                     return $this->respondWithError('Tên đăng nhập hoặc mật khẩu không đúng.', self::HTTP_INTERNAL_SERVER_ERROR);
