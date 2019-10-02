@@ -5,6 +5,7 @@ namespace Zilliqa\API\Controllers;
 use Zilliqa\Backend\Models\Lending AS LendingModel;
 use Illuminate\Http\Request;
 use Zilliqa\Backend\Models\UserLending;
+use Zilliqa\Backend\Models\HistoryDeposit;
 use JWTAuth;
 
 /**
@@ -12,11 +13,12 @@ use JWTAuth;
  */
 class Lending extends General {
 
-    protected $lendingRepository, $userLendingRepository;
+    protected $lendingRepository, $userLendingRepository, $depositRepository;
 
-    public function __construct(LendingModel $lendingModel, UserLending $userLendingModel) {
+    public function __construct(LendingModel $lendingModel, UserLending $userLendingModel, HistoryDeposit $deposit) {
         $this->lendingRepository = $lendingModel;
         $this->userLendingRepository = $userLendingModel;
+		$this->depositRepository = $deposit;
     }
 
     /**

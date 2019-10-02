@@ -92,20 +92,20 @@ class User extends General {
     public function signup(Request $request) {
         try {
             $userCode = $request->get("user_code");
-            $userCode = base64_decode($userCode);
+            //$userCode = base64_decode($userCode);
             $data = $request->post();
             $validator = Validator::make($data, [
                         'name' => 'required|string',
                         'username' => 'required|string',
                         'email' => 'required|string|email|unique:users',
                         'password' => 'required|string|min:6',
-                        'referral' => 'required'
+                        'user_code' => 'required'
             ]);
             if ($validator->fails()) {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
             } else {
                 //Create User                
-                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation');
+                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id');
                 $userModel = UserModel::create($credentials);
 
                 $userModel->save();
@@ -113,14 +113,14 @@ class User extends General {
                 //Add User Commission
                 $presenter = $this->userRepository->where('user_code', $userCode)->first()->toArray();
                 $presenterID = $presenter['id'];
-                $parentPresent = 0;                
+                $parentPresent = 0;
 
-                $data = $this->presenterRepository->where('user_present',$presenterID)->first();
-                if($data){
+                $data = $this->presenterRepository->where('user_present', $presenterID)->first();
+                if ($data) {
                     $parentPresent = $data->parent_present;
                 }
                 $arrPresenter = [
-                   'user_id' => $userModel->id, 'user_present' => $presenterID,'parent_present' => $parentPresent
+                    'user_id' => $userModel->id, 'user_present' => $presenterID, 'parent_present' => $parentPresent
                 ];
                 $this->presenterRepository->create($arrPresenter);
 
@@ -263,7 +263,7 @@ class User extends General {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -275,6 +275,38 @@ class User extends General {
             return $this->respondWithData($countryList);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * detail
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function detail() {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            if($user)
+                return $this->respondWithData($user->toArray());
+            else
+                return $this->respondWithData();
+        } catch (\Exception $ex) {
+            return $this->respondWithError($ex->getMessage(), $ex->getStatusCode());
+        }
+    }
+
+    /**
+     * checkReferal
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function checkReferal(Request $request) {
+        try {
+            $userCode = $request->get('user_code');
+            $user = $this->userRepository->where('user_code', $userCode)->get();
+            return $this->respondWithData($user);
+        } catch (\Exception $ex) {
+            return $this->respondWithError($ex->getMessage(), $ex->getStatusCode());
         }
     }
 

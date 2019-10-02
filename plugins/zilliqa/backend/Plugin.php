@@ -62,6 +62,13 @@ class Plugin extends PluginBase {
             
             
             $form->addTabFields([
+				 'user_code' => [
+                    'label' => 'User Code',
+                    'type' => 'text',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',    
+					'readOnly' =>true
+                ],
                 'is_block' => [
                     'label' => 'Block user',
                     'type' => 'switch',
@@ -153,6 +160,9 @@ class Plugin extends PluginBase {
 
             // Add an extra birthday column
             $widget->addColumns([
+				'user_code' => [
+                    'label' => 'User Code'
+                ],
                 'zil_address' => [
                     'label' => 'ZIL Address'
                 ],
@@ -265,6 +275,20 @@ class Plugin extends PluginBase {
                     ]
                 ]
             ],
+        ];
+    }
+	
+	public function registerSettings() {
+        return [
+            'settings' => [
+                'label' => 'Settings Zilliqa',
+                'description' => 'Settings Zilliqa',
+                'category' => 'Zilliqa',
+                'icon' => 'icon-cogs',
+                'class' => 'Zilliqa\Backend\Models\Setting',
+                'order' => 500,
+                'permissions' => ['*']
+            ]
         ];
     }
     

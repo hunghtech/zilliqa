@@ -20,3 +20,6 @@
 1.0.8:
     - 'Created table zilliqa_backend_countries'
     - builder_table_create_zilliqa_backend_countries.php
+1.0.9:
+    - 'Updated table zilliqa_backend_history_deposit'
+    - builder_table_update_zilliqa_backend_history_deposit.php

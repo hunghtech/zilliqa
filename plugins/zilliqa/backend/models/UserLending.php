@@ -14,6 +14,11 @@ class UserLending extends Model
      * @var string The database table used by the model.
      */
     public $table = 'zilliqa_backend_user_lending';
+    
+    /**
+     * @var array Fillable fields
+     */
+    protected $fillable = ['user_id','status', 'lending_id'];
 
     /**
      * @var array Validation rules

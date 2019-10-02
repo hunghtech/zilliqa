@@ -4,6 +4,11 @@ fields:
         showSearch: true
         span: auto
         type: dropdown
+    lending_id:
+        label: Lending
+        showSearch: true
+        span: auto
+        type: dropdown
     coint:
         label: Coint
         showSearch: true
@@ -12,6 +17,7 @@ fields:
         options:
             ZIL: ZIL
             BTC: BTC  
+            ETH: ETH
     amount:
         label: Amount
         span: auto

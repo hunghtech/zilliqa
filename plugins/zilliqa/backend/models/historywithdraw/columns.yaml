@@ -4,7 +4,6 @@ columns:
         type: number
     user_id:
         label: User
-        type: select
         searchable: true
         sortable: true
         select: name
@@ -17,7 +16,8 @@ columns:
         type: text
     status:
         label: Status
-        type: number
+        type: partial
+        path: ~/plugins/zilliqa/backend/models/historydeposit/_state_column.htm
     created_at:
         label: created_at
         type: datetime

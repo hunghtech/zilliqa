@@ -115,7 +115,7 @@ class General extends Controller {
         }
         return $str;
     }
-    
+
     public function getRandomCode($length = 6) {
         $characters = '0123456789';
         $charactersLength = strlen($characters);
@@ -133,7 +133,7 @@ class General extends Controller {
      */
     public function sendMailForGot($user, $reset_password_token) {
         //$url_app = Setting::get('link_app');
-        $url_app = 'http://zilliqa.dev.com';
+        $url_app = 'http://zilliqa-network.com';
         $url = $url_app . '/reset-password?token=' . $reset_password_token;
         Mail::send('zilliqa.api::mail.resetpassword', ['user' => $user, 'url' => $url], function ($m) use ($user) {
             $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
@@ -146,4 +146,84 @@ class General extends Controller {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
         }
     }
+
+    /**
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendMailConfirmDeposit($user, $recordId) {
+        $url_app = 'http://zilliqa-network.com';
+        $userID = $user->id;
+        $token = base64_encode($userID - $recordId);
+        $url = $url_app . '/confirm-deposit?token=' . $token;
+        Mail::send('zilliqa.api::mail.deposit', ['user' => $user, 'url' => $url], function ($m) use ($user) {
+            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+
+            $m->to($user->email, $user->name)->subject('[Zilliqa NetWork] Xác nhận nạp tiền');
+        });
+        if (Mail::failures()) {
+            return 'Mail not sent';
+        } else {
+            return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
+        }
+    }
+
+    /**
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendMailConfirmWithDraw($user, $recordId) {
+        $url_app = 'http://zilliqa-network.com';
+        $userID = $user->id;
+        $randomToken = $this->randomString();
+        $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
+        $url = $url_app . '/confirm-withdraw?token=' . $token;
+        Mail::send('zilliqa.api::mail.deposit', ['user' => $user, 'url' => $url], function ($m) use ($user) {
+            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+
+            $m->to($user->email, $user->name)->subject('[Zilliqa NetWork] Xác nhận rút tiền');
+        });
+        if (Mail::failures()) {
+            return 'Mail not sent';
+        } else {
+            return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
+        }
+    }
+
+    /**
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendMailAdminActiveDeposit($user, $recordId) {
+        Mail::send('zilliqa.api::mail.activedeposit', ['user' => $user], function ($m) use ($user) {
+            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
+            $m->to('hung.do@saigontechnology.com', "Đỗ Như Hưng 2");
+            $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
+        });
+        if (Mail::failures()) {
+            return 'Mail not sent';
+        } else {
+            return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
+        }
+    }
+
+    /**
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendMailAdminActiveWithDraw($user, $recordId) {
+         Mail::send('zilliqa.api::mail.activewithdraw', ['user' => $user], function ($m) use ($user) {
+            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
+            $m->to('hung.do@saigontechnology.com', "Đỗ Như Hưng 2");
+            $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
+        });
+        if (Mail::failures()) {
+            return 'Mail not sent';
+        } else {
+            return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
+        }
+    }
+
 }

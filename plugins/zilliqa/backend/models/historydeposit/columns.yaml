@@ -3,10 +3,13 @@ columns:
         label: id
         type: number
     user_id:
-        label: User
-        type: select
+        label: User        
         select: name
         relation: user
+    lending_id:
+        label: Lending        
+        select: title
+        relation: lending
     coint:
         label: Coint
         type: text
@@ -15,7 +18,8 @@ columns:
         type: text
     status:
         label: Status
-        type: number
+        type: partial
+        path: ~/plugins/zilliqa/backend/models/historydeposit/_state_column.htm
     created_at:
         label: created_at
         type: datetime
