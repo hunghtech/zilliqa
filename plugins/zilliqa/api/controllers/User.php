@@ -40,7 +40,7 @@ class User extends General {
      */
     public function login(Request $request) {
         try {
-            $now = date('Y-m-d H:i:s');            
+            $now = date('Y-m-d H:i:s');
             $username = $request->get('username');
             $password = $request->get('password');
             $credentials = $request->only('username', 'password');
@@ -60,7 +60,7 @@ class User extends General {
                         $user = $userModel->getAuthApiSigninAttributes();
                     } else {
                         $user->token = JWTAuth::fromUser($user);
-                    }                    
+                    }
                     return $this->respondWithData($user);
                 } else {
                     return $this->respondWithError('Tên đăng nhập hoặc mật khẩu không đúng.', self::HTTP_INTERNAL_SERVER_ERROR);
@@ -107,7 +107,7 @@ class User extends General {
             if ($validator->fails()) {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
             } else {
-                //Create User                
+                //Create User
                 $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id');
                 $userModel = UserModel::create($credentials);
 
@@ -161,7 +161,7 @@ class User extends General {
                     //Current password and new password are same
                     return $this->respondWithError('Mật khẩu mới trùng với mật khẩu hiện tại.', self::HTTP_METHOD_NOT_ALLOWED);
                 }
-                //Change Password                
+                //Change Password
                 $newPassword = $request->get('new_password');
                 $user->password = $newPassword;
                 $user->password_confirmation = $newPassword;
@@ -310,6 +310,23 @@ class User extends General {
             return $this->respondWithData($user);
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), $ex->getStatusCode());
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getListReferal() {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            if($user){
+                $userID = $user->id;
+                $list = $this->presenterRepository->where('user_present')->get();
+                return $this->respondWithData($list);
+            }
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
 

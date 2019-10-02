@@ -7,6 +7,7 @@ use RainLab\User\Models\User;
 use Zilliqa\Backend\Models\Lending;
 use JWTAuth;
 use Zilliqa\Backend\Models\UserLending;
+use Zilliqa\Backend\Models\Presenter;
 
 /**
  * Model
@@ -56,7 +57,7 @@ class HistoryDeposit extends Model {
         $lendings = Lending::lists('title', 'id');
         return $lendings;
     }
-    
+
     public function afterSave() {
         if ($this->status == 2) {
             //Insert user Lending
@@ -66,8 +67,9 @@ class HistoryDeposit extends Model {
             UserLending::create($arrData);
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
+            $package = $lending->title;
             $bonusZil = $lending->bonus_zil;
-            //Update Zill for user            
+            //Update Zill for user
             if ($bonusZil > 0) {
                 $user = User::find($this->user_id);
                 if ($user) {
@@ -76,6 +78,20 @@ class HistoryDeposit extends Model {
                     $user->zilliqa_minimum = $user->zilliqa_minimum + $zilliqa_minimum;
                     $user->save();
                 }
+            }
+
+            //Update Commission for User
+            $commission = $package/10;
+            $presenter = Presenter::where('user_id',$this->user_id)->first();
+            if($presenter){
+                $presenterID = $presenter->user_present;
+                $presenter->business_volume = $presenter->business_volume +  $commission;
+                $presenter->save();
+
+                
+                $user = User::find($presenterID);
+                $user->commission = $user->commission + $commission;
+                $user->save();
             }
         }
     }

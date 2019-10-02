@@ -24,7 +24,7 @@ class General extends Controller {
     const HTTP_METHOD_NOT_ALLOWED = Response::HTTP_METHOD_NOT_ALLOWED;
 
     public function __construct() {
-        
+
     }
 
     protected function getStatusCode() {
@@ -216,7 +216,7 @@ class General extends Controller {
          Mail::send('zilliqa.api::mail.activewithdraw', ['user' => $user], function ($m) use ($user) {
             $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
             $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
-            $m->to('hung.do@saigontechnology.com', "Đỗ Như Hưng 2");
+            $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
         });
         if (Mail::failures()) {

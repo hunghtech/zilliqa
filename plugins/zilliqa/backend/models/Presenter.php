@@ -8,13 +8,13 @@ use Model;
 class Presenter extends Model
 {
     use \October\Rain\Database\Traits\Validation;
-    
+
 
     /**
      * @var string The database table used by the model.
      */
     public $table = 'zilliqa_backend_presenter';
-    
+
      /**
      * @var array Fillable fields
      */
@@ -25,6 +25,34 @@ class Presenter extends Model
     /**
      * @var array Validation rules
      */
-    public $rules = [
-    ];
+    public $rules = [];
+
+    /**
+     * @var array Relations
+     */
+    public $hasOne = [];
+    public $hasMany = [];
+    public $belongsToMany = [];
+    public $morphTo = [];
+    public $morphOne = [];
+    public $morphMany = [];
+    public $attachOne = [];
+    public $attachMany = [];
+    protected $appends = ['user', 'user_referal'];
+
+    /**
+     * @return mixed
+     */
+    public function getUserAttribute() {
+        $users = User::where('user_id', $this->user_id)->get()->toArray();
+        return $users;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserReferalAttribute() {
+        $users = User::where('user_present', $this->user_present)->get()->toArray();
+        return $users;
+    }
 }
