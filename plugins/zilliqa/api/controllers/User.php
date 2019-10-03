@@ -248,17 +248,22 @@ class User extends General {
             if ($validator->fails()) {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
             } else {
-                $user_id = $request->get("user_id");
+                $userToken = JWTAuth::parseToken()->authenticate();
+                $user_id = $userToken->id;
                 //Update User
                 $user = $this->userRepository->find($user_id);
 
-                $password = $request->get('password');
+                /*$password = $request->get('password');
                 if (!empty($password)) {
                     $user->fill($request->all(['username', 'email', 'password', 'password_confirmation']));
                 } else {
                     $user->fill($request->all(['username', 'email','zil_address','eth_address']));
-                }
-
+                }*/
+                
+                $user->username = $request->get("username");
+                $user->email = $request->get("email");
+                $user->zil_address = $request->get("zil_address");
+                $user->eth_address = $request->get("eth_address");
                 $user->save();
                 $user->token = JWTAuth::fromUser($user);
                 return $this->respondWithData($user);
@@ -323,7 +328,7 @@ class User extends General {
             $user = JWTAuth::parseToken()->authenticate();
             if($user){
                 $userID = $user->id;
-                $list = $this->presenterRepository->where('user_present')->get();
+                $list = $this->presenterRepository->where('user_present',$userID)->get();
                 return $this->respondWithData($list);
             }
         } catch (Exception $e) {

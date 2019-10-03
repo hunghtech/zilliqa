@@ -1,6 +1,7 @@
 <?php namespace Zilliqa\Backend\Models;
 
 use Model;
+use RainLab\User\Models\User;
 
 /**
  * Model
@@ -44,7 +45,7 @@ class Presenter extends Model
      * @return mixed
      */
     public function getUserAttribute() {
-        $users = User::where('user_id', $this->user_id)->get()->toArray();
+        $users = User::where('id', $this->user_id)->get()->toArray();
         return $users;
     }
 
@@ -52,7 +53,7 @@ class Presenter extends Model
      * @return mixed
      */
     public function getUserReferalAttribute() {
-        $users = User::where('user_present', $this->user_present)->get()->toArray();
+        $users = User::where('id', $this->user_present)->get()->toArray();
         return $users;
     }
 }
