@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Bonus Daily
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/bonusdaily/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\BonusDaily
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/bonusdaily
+
+# Create page
+create:
+    title: Create Bonus Daily
+    redirect: zilliqa/backend/bonusdaily/update/:id
+    redirectClose: zilliqa/backend/bonusdaily
+
+# Update page
+update:
+    title: Edit Bonus Daily
+    redirect: zilliqa/backend/bonusdaily
+    redirectClose: zilliqa/backend/bonusdaily
+
+# Preview page
+preview:
+    title: Preview Bonus Daily

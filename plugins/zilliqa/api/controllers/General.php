@@ -154,7 +154,8 @@ class General extends Controller {
     public function sendMailConfirmDeposit($user, $recordId) {
         $url_app = 'http://zilliqa-network.com';
         $userID = $user->id;
-        $token = base64_encode($userID - $recordId);
+        $randomToken = $this->randomString();
+        $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
         $url = $url_app . '/confirm-deposit?token=' . $token;
         Mail::send('zilliqa.api::mail.deposit', ['user' => $user, 'url' => $url], function ($m) use ($user) {
             $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
@@ -198,7 +199,7 @@ class General extends Controller {
         Mail::send('zilliqa.api::mail.activedeposit', ['user' => $user], function ($m) use ($user) {
             $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
             $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
-            $m->to('hung.do@saigontechnology.com', "Đỗ Như Hưng 2");
+            $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
         });
         if (Mail::failures()) {

@@ -1,0 +1,11 @@
+columns:
+    user_id:
+        label: User        
+        select: name
+        relation: user
+    daily:
+        label: 'Bonus Daily'
+        type: number
+    created_at:
+        label: 'Created Date'
+        type: datetime

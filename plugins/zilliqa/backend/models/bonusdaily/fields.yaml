@@ -1,0 +1,10 @@
+fields:
+    user_id:
+        label: User
+        showSearch: true
+        span: auto
+        type: dropdown
+    daily:
+        label: 'Bonus Daily'
+        span: auto
+        type: text

@@ -40,7 +40,7 @@ class User extends General {
      */
     public function login(Request $request) {
         try {
-            $now = date('Y-m-d H:i:s');
+            $now = date('Y-m-d H:i:s');            
             $username = $request->get('username');
             $password = $request->get('password');
             $credentials = $request->only('username', 'password');
@@ -293,7 +293,7 @@ class User extends General {
      * @return \Illuminate\Http\Response
      */
     public function detail() {
-        try {
+        try {            
             $user = JWTAuth::parseToken()->authenticate();
             if($user)
                 return $this->respondWithData($user->toArray());
@@ -312,7 +312,7 @@ class User extends General {
     public function checkReferal(Request $request) {
         try {
             $userCode = $request->get('user_code');
-            $user = $this->userRepository->where('user_code', $userCode)->get();
+            $user = $this->userRepository->where('user_code', $userCode)->first();
             return $this->respondWithData($user);
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), $ex->getStatusCode());

@@ -43,13 +43,25 @@ class Plugin extends PluginBase {
      * @return array
      */
     public function boot() {
+        $this->app->singleton('zilliqa:updatedaily', function() {
+            return new \Zilliqa\Backend\Console\UpdateDaily;
+        });
+
+        $this->commands('zilliqa:updatedaily');
+        
+        $this->app->singleton('zilliqa:updatezil', function() {
+            return new \Zilliqa\Backend\Console\UpdateZil;
+        });
+
+        $this->commands('zilliqa:updatezil');
+        
         //Extend user Model
         UserModel::extend(function($model) {
             $model->hasMany['deposit'] = ['\Zilliqa\Backend\Models\HistoryDeposit', 'key' => 'user_id'];
-            $model->hasMany['withdraw'] = ['\Zilliqa\Backend\Models\HistoryWithDraw', 'key' => 'user_id'];                        
-            $model->belongsTo['country'] = ['\Zilliqa\Backend\Models\Country', 'key' => 'country_id'];                        
+            $model->hasMany['withdraw'] = ['\Zilliqa\Backend\Models\HistoryWithDraw', 'key' => 'user_id'];
+            $model->belongsTo['country'] = ['\Zilliqa\Backend\Models\Country', 'key' => 'country_id'];
         });
-        
+
         //Extend Form Fields
         UserController::extendFormFields(function($form, $model, $context) {
             if (!$model instanceof UserModel)
@@ -59,75 +71,75 @@ class Plugin extends PluginBase {
 
             if (!$model->exists)
                 return;
-            
-            
+
+
             $form->addTabFields([
-				 'user_code' => [
+                'user_code' => [
                     'label' => 'User Code',
                     'type' => 'text',
                     'tab' => 'rainlab.user::lang.user.account',
-                    'span' => 'auto',    
-					'readOnly' =>true
+                    'span' => 'auto',
+                    'readOnly' => true
                 ],
                 'is_block' => [
                     'label' => 'Block user',
                     'type' => 'switch',
                     'tab' => 'rainlab.user::lang.user.account',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'country_id' => [
                     'label' => 'Country',
                     'type' => 'dropdown',
                     'tab' => 'rainlab.user::lang.user.account',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
             ]);
-            
+
             $form->addTabFields([
                 'zil_address' => [
                     'label' => 'Zil Address',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'eth_address' => [
                     'label' => 'Eth Address',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'daily' => [
                     'label' => 'Daily',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'commission' => [
                     'label' => 'Commission',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'lending' => [
                     'label' => 'Lending',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'zilliqa' => [
                     'label' => 'Zilliqa',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ],
                 'downline_member' => [
                     'label' => 'Downline Member',
                     'type' => 'text',
                     'tab' => 'Zilliqa',
-                    'span' => 'auto',                    
+                    'span' => 'auto',
                 ]
             ]);
-            
+
             //Add tab fields
             $form->addTabFields([
                 'deposit' => [
@@ -143,10 +155,9 @@ class Plugin extends PluginBase {
                     'tab' => 'History WithDraw'
                 ]
             ]);
-            
         });
-        
-         Event::listen('backend.list.extendColumns', function($widget) {
+
+        Event::listen('backend.list.extendColumns', function($widget) {
 
             // Only for the User controller
             if (!$widget->getController() instanceof \RainLab\User\Controllers\Users) {
@@ -160,7 +171,7 @@ class Plugin extends PluginBase {
 
             // Add an extra birthday column
             $widget->addColumns([
-				'user_code' => [
+                'user_code' => [
                     'label' => 'User Code'
                 ],
                 'zil_address' => [
@@ -186,11 +197,11 @@ class Plugin extends PluginBase {
             // Remove a Surname column
             $widget->removeColumn('surname');
         });
-        
+
         UserModel::saving(function($model) {
-            if (!$model->id) {                
+            if (!$model->id) {
                 $model->user_code = $this->getRandomCode();
-                $model->attributes['is_activated'] = true;                
+                $model->attributes['is_activated'] = true;
             }
         });
     }
@@ -252,6 +263,13 @@ class Plugin extends PluginBase {
                         'permissions' => ['zilliqa.backend.*'],
                         'group' => 'Zilliqa',
                     ],
+                    'bonusdaily' => [
+                        'label' => 'Bonus Daily',
+                        'icon' => 'icon-money',
+                        'url' => Backend::url('zilliqa/backend/bonusdaily'),
+                        'permissions' => ['zilliqa.backend.*'],
+                        'group' => 'Zilliqa',
+                    ],
                     'historydeposit' => [
                         'label' => 'History Deposit',
                         'icon' => 'icon-history',
@@ -277,8 +295,8 @@ class Plugin extends PluginBase {
             ],
         ];
     }
-	
-	public function registerSettings() {
+
+    public function registerSettings() {
         return [
             'settings' => [
                 'label' => 'Settings Zilliqa',
@@ -291,7 +309,7 @@ class Plugin extends PluginBase {
             ]
         ];
     }
-    
+
     private function getRandomCode($length = 6) {
         $characters = '0123456789';
         $charactersLength = strlen($characters);
@@ -302,4 +320,9 @@ class Plugin extends PluginBase {
         return $randomString;
     }
 
+    public function registerSchedule($schedule)
+    {
+        $schedule->command('zilliqa:updatedaily')->dailyAt('01:00');
+        $schedule->command('zilliqa:updatezil')->dailyAt('01:00');
+    }
 }

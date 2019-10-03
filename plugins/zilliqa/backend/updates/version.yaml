@@ -23,3 +23,6 @@
 1.0.9:
     - 'Updated table zilliqa_backend_history_deposit'
     - builder_table_update_zilliqa_backend_history_deposit.php
+1.0.10:
+    - 'Created table zilliqa_backend_bonus_daily'
+    - builder_table_create_zilliqa_backend_bonus_daily.php
