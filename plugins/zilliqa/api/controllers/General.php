@@ -136,7 +136,7 @@ class General extends Controller {
         $url_app = 'http://zilliqa-network.com';
         $url = $url_app . '/reset-password?token=' . $reset_password_token;
         Mail::send('zilliqa.api::mail.resetpassword', ['user' => $user, 'url' => $url], function ($m) use ($user) {
-            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
 
             $m->to($user->email, $user->name)->subject('[Zilliqa NetWork] Quên mật khẩu');
         });
@@ -158,7 +158,7 @@ class General extends Controller {
         $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
         $url = $url_app . '/confirm-deposit?token=' . $token;
         Mail::send('zilliqa.api::mail.deposit', ['user' => $user, 'url' => $url], function ($m) use ($user) {
-            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
 
             $m->to($user->email, $user->name)->subject('[Zilliqa NetWork] Xác nhận nạp tiền');
         });
@@ -180,7 +180,7 @@ class General extends Controller {
         $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
         $url = $url_app . '/confirm-withdraw?token=' . $token;
         Mail::send('zilliqa.api::mail.deposit', ['user' => $user, 'url' => $url], function ($m) use ($user) {
-            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
 
             $m->to($user->email, $user->name)->subject('[Zilliqa NetWork] Xác nhận rút tiền');
         });
@@ -197,7 +197,7 @@ class General extends Controller {
      */
     public function sendMailAdminActiveDeposit($user, $recordId) {
         Mail::send('zilliqa.api::mail.activedeposit', ['user' => $user], function ($m) use ($user) {
-            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
             $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
             $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
@@ -215,7 +215,7 @@ class General extends Controller {
      */
     public function sendMailAdminActiveWithDraw($user, $recordId) {
          Mail::send('zilliqa.api::mail.activewithdraw', ['user' => $user], function ($m) use ($user) {
-            $m->from('system.greenhld@gmail.com', 'Zilliqa Network');
+            $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
             $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
             $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
