@@ -335,5 +335,26 @@ class User extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
+    
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function confirmRegister(Request $request) {
+        try {
+            $token = $request->get('token');
+            $user = $this->userRepository->where('activation_code',$token)->first();
+            if($user){
+                $user->is_activated = 1;
+                $user->activation_code = "";       
+                $user->save();
+                return $this->respondWithData($user);
+            }
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+    
+    
 
 }

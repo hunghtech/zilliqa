@@ -6,6 +6,7 @@ use Backend;
 use System\Classes\PluginBase;
 use BackendMenu;
 use Event;
+use Mail;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Controllers\Users as UserController;
 
@@ -14,6 +15,8 @@ use RainLab\User\Controllers\Users as UserController;
  */
 class Plugin extends PluginBase {
 
+    private $isNew = false;
+    private $activation_code = "";
     /**
      * Returns information about this plugin.
      *
@@ -200,10 +203,24 @@ class Plugin extends PluginBase {
 
         UserModel::saving(function($model) {
             if (!$model->id) {
+                $this->isNew = true;
                 $model->user_code = $this->getRandomCode();
-                $model->attributes['is_activated'] = true;
+                $activation_code = $this->randomString(20);
+                $model->activation_code = $activation_code;
+                $this->activation_code = $activation_code;
+                //$model->attributes['is_activated'] = true;
             }
         });
+        UserModel::saved(function($model) {
+            if ($this->isNew) {
+                $link = "http://zilliqa-network.com/confirm-register?token=".$this->activation_code;
+                $params = [
+                    'name' => $model->name,
+                    'link' => $link
+                ];
+                Mail::sendTo($model->email, 'rainlab.user::mail.activate', $params);
+            }
+        });                
     }
 
     /**
@@ -320,6 +337,22 @@ class Plugin extends PluginBase {
         return $randomString;
     }
 
+    /**
+     * random String Password
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private static function randomString($length = 10) {
+        $str = "";
+        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
+    
     public function registerSchedule($schedule)
     {
         $schedule->command('zilliqa:updatedaily')->dailyAt('01:00');

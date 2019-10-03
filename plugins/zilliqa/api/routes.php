@@ -13,6 +13,7 @@ Route::group([
         Route::post('resetPassword', 'Zilliqa\Api\Controllers\User@resetPassword');
         Route::get('country', 'Zilliqa\Api\Controllers\User@listCountry')->name('user.listCountry');
         Route::post('check-referal', 'Zilliqa\Api\Controllers\User@checkReferal');
+        Route::post('confirm-register', 'Zilliqa\Api\Controllers\User@confirmRegister');
     });
 
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('user')->group(function () {
