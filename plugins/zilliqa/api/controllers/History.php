@@ -74,7 +74,7 @@ class History extends General {
             $deposit = $this->depositRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'lending_id']));
             if ($deposit) {
                 $user = JWTAuth::parseToken()->authenticate();
-                $this->sendMailConfirmDeposit($user, $deposit->id);
+                $this->sendMailConfirmDeposit($user, $deposit);
             }
             return $this->respondWithData($deposit);
         } catch (\Exception $e) {
@@ -92,7 +92,7 @@ class History extends General {
             $withDraw = $this->withDrawRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'type']));
             if ($withDraw) {
                 $user = JWTAuth::parseToken()->authenticate();
-                $this->sendMailConfirmWithDraw($user, $withDraw->id);
+                $this->sendMailConfirmWithDraw($user, $withDraw);
             }
             return $this->respondWithData($withDraw);
         } catch (\Exception $e) {
@@ -127,7 +127,7 @@ class History extends General {
                 $deposit->status = 1;
                 $deposit->save();
                 $user = JWTAuth::parseToken()->authenticate();
-                $this->sendMailAdminActiveDeposit($user, $historyId);
+                $this->sendMailAdminActiveDeposit($user, $deposit);
                 return $this->respondWithData($deposit);
             }
         } catch (\Exception $e) {
@@ -147,7 +147,7 @@ class History extends General {
                 $withDraw->status = 1;
                 $withDraw->save();
                 $user = JWTAuth::parseToken()->authenticate();
-                $this->sendMailAdminActiveWithDraw($user, $historyId);
+                $this->sendMailAdminActiveWithDraw($user, $withDraw);
                 return $this->respondWithData($withDraw);
             }
         } catch (\Exception $e) {

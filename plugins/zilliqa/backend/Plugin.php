@@ -213,10 +213,12 @@ class Plugin extends PluginBase {
         });
         UserModel::saved(function($model) {
             if ($this->isNew) {
+                $logo = url('/')."/plugins/zilliqa/api/assets/images/logo.png";
                 $link = "http://zilliqa-network.com/confirm-register?token=".$this->activation_code;
                 $params = [
                     'name' => $model->name,
-                    'link' => $link
+                    'link' => $link,
+                    'logo' => $logo
                 ];
                 Mail::sendTo($model->email, 'rainlab.user::mail.activate', $params);
             }
@@ -351,6 +353,15 @@ class Plugin extends PluginBase {
             $str .= $characters[$rand];
         }
         return $str;
+    }
+    
+    public function registerMailTemplates() {
+        return [
+            'zilliqa.api::mail.deposit' => 'Confirm Deposit',
+            'zilliqa.api::mail.withdraw' => 'Confirm WithDraw',
+            'zilliqa.api::mail.activedeposit' => 'Active Deposit',
+            'zilliqa.api::mail.activewithdraw' => 'Active WithDraw',
+        ];
     }
     
     public function registerSchedule($schedule)

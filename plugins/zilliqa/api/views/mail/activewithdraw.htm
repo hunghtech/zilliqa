@@ -1,7 +1,25 @@
 subject = "Xác nhận rút tiền"
 description = "Xác nhận rút tiền"
 ==
-Xin chào Admin
+<a href="http://zilliqa-network.com">
+    <img style="width: 120px; margin-left: 35%" src="{{logo}}"/>
+</a>
+<p>Xin chào Admin</p>
 
-Vừa rồi {{user.name}} đã thực hiện giao dịch rút tiền.
-Vui lòng vào trang quản trị để kiểm tra
+<p>
+    Vừa rồi {{user.name}} đã thực hiện giao dịch nạp tiền vào tài khoản.
+</p>
+<p>
+    Thông tin giao dịch:
+</p>
+Deposit Request:{{data.id}}   
+Amount: {{data.amount}}ETH
+Time: {{data.created_at}}    
+<p>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        Zilliqa Team
+    </span>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        Automated message.please do not reply
+    </span>
+</p>

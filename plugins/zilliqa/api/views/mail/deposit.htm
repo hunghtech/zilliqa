@@ -1,10 +1,26 @@
-subject = "Xác nhận nạp tiền"
-description = "Xác nhận nạp tiền"
+subject = "Deposit Confirmation"
+description = "Deposit Confirmation"
 ==
-Xin chào {{ user.name }}
+<a href="http://zilliqa-network.com">
+    <img style="width: 120px; margin-left: 35%" src="{{logo}}"/>
+</a>
+<p>Hello {{ user.name }}</p>
 
-Chúng tôi cần xác minh rằng đây là địa chỉ email của bạn.
-
-Vui lòng nhấp vào liên kết dưới đây để xác nhận tài khoản của bạn vừa thực hiện giao dịch nạp tiền:
-
-Link:{{url}}
+<p>
+    This is a notice that your account depositing {{amount}} ETH. Please click the link below when you has successfully transered to ETH Address we provided.
+</p>
+<p>
+    {{url}}
+</p>
+<p>
+    If this was not your action, please contact us immediately.
+    <a href="mailto:support@zilliqa-network.com">support@zilliqa-network.com</a>    
+</p>
+<p>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        Zilliqa Team
+    </span>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        Automated message.please do not reply
+    </span>
+</p>
