@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: History Daily
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/historydaily/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\HistoryDaily
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/historydaily
+
+# Create page
+create:
+    title: Create History Daily
+    redirect: zilliqa/backend/historydaily/update/:id
+    redirectClose: zilliqa/backend/historydaily
+
+# Update page
+update:
+    title: Edit History Daily
+    redirect: zilliqa/backend/historydaily
+    redirectClose: zilliqa/backend/historydaily
+
+# Preview page
+preview:
+    title: Preview History Daily

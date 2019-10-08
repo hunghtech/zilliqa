@@ -1,0 +1,11 @@
+columns:
+    user_id:
+        label: User        
+        select: name
+        relation: user
+    daily:
+        label: daily
+        type: number
+    created_at:
+        label: created_at
+        type: datetime

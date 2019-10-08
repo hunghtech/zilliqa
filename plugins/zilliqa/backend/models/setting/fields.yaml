@@ -9,3 +9,33 @@ tabs:
             span: auto
             tab: Config
             required: true
+        percent_f1:
+            label: Percent F1
+            type: text
+            span: auto
+            tab: Commission
+            required: true
+        percent_f2:
+            label: Percent F2
+            type: text
+            span: auto
+            tab: Commission
+            required: true
+        percent_f3:
+            label: Percent F3
+            type: text
+            span: auto
+            tab: Commission
+            required: true            
+        percent_f4:
+            label: Percent F4
+            type: text
+            span: auto
+            tab: Commission
+            required: true           
+        percent_f5:
+            label: Percent F5
+            type: text
+            span: auto
+            tab: Commission
+            required: true            

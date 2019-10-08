@@ -74,3 +74,6 @@
 1.5.2:
     - Users Add country id, is_block
     - users_add_country_id.php
+1.5.3:
+    - Users Add gender, dob
+    - users_add_user_gender.php    

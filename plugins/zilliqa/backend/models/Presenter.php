@@ -56,4 +56,12 @@ class Presenter extends Model
         $users = User::where('id', $this->user_present)->get()->toArray();
         return $users;
     }
+    
+    public static function getReferralLevel($user_id){
+        return self::where('user_present',$user_id)->count();
+    }
+    
+    public static function getCommissionReferralLevel($user_id){
+        return self::where('user_present',$user_id)->count();
+    }
 }

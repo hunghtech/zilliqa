@@ -43,14 +43,16 @@ class UpdateZil extends Command {
                     }
 
                     //Update Daily for User
-                    $user = User::find($userID); {
+                    $user = User::find($userID); 
+                    if($user)
+                    {
                         $user->zilliqa_minimum = $user->zilliqa_minimum + $bonusZil;
                         $user->save();
-                    }
-                    
-                     DB::table('zilliqa_backend_user_lending')
+                        DB::table('zilliqa_backend_user_lending')
                             ->where('id', $item->id)
                             ->update(['is_update_bonus' => 1]);
+                    }
+                                         
                 }                
             }
         }

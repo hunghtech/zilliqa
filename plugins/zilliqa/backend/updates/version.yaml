@@ -26,3 +26,9 @@
 1.0.10:
     - 'Created table zilliqa_backend_bonus_daily'
     - builder_table_create_zilliqa_backend_bonus_daily.php
+1.0.11:
+    - 'Created table zilliqa_backend_history_daily'
+    - builder_table_create_zilliqa_backend_history_daily.php
+1.0.12:
+    - 'Created table zilliqa_backend_history_commission'
+    - builder_table_create_zilliqa_backend_history_commission.php

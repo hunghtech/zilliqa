@@ -1,0 +1,10 @@
+fields:
+    user_id:
+        label: User
+        showSearch: true
+        span: auto
+        type: dropdown
+    commission:
+        label: Commission
+        span: auto
+        type: text

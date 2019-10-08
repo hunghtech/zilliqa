@@ -45,12 +45,12 @@ class User extends General {
             $password = $request->get('password');
             $credentials = $request->only('username', 'password');
             if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->respondWithError('Tên đăng nhập hoặc mật khẩu không đúng.', self::HTTP_INTERNAL_SERVER_ERROR);
+                return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
             }
             $user = $this->userRepository->where('username', $username)->first();
             if ($user) {
                 if ($user->is_activated == 0) {
-                    return $this->respondWithError('Tài khoản chưa được kích hoạt. Vui lòng liên hệ với admin', self::HTTP_INTERNAL_SERVER_ERROR);
+                    return $this->respondWithError('The account has not been activated. Please contact the admin', self::HTTP_INTERNAL_SERVER_ERROR);
                 }
                 if (Hash::check($password, $user->password)) {
                     $userModel = JWTAuth::authenticate($token);
@@ -63,10 +63,10 @@ class User extends General {
                     }
                     return $this->respondWithData($user);
                 } else {
-                    return $this->respondWithError('Tên đăng nhập hoặc mật khẩu không đúng.', self::HTTP_INTERNAL_SERVER_ERROR);
+                    return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
-                return $this->respondWithError('Tên đăng nhập hoặc mật khẩu không đúng.', self::HTTP_BAD_REQUEST);
+                return $this->respondWithError('Username or password incorrect', self::HTTP_BAD_REQUEST);
             }
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
@@ -99,16 +99,18 @@ class User extends General {
             $data = $request->post();
             $validator = Validator::make($data, [
                         'name' => 'required|string',
-                        'username' => 'required|string',
+                        'username' => 'required|string|unique:users',
                         'email' => 'required|string|email|unique:users',
                         'password' => 'required|string|min:6',
-                        'user_code' => 'required'
+                        'user_code' => 'required',
+                        'gender' => 'required',
+                        'dob' => 'required'
             ]);
             if ($validator->fails()) {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
             } else {
                 //Create User
-                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id');
+                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id','gender','dob');
                 $userModel = UserModel::create($credentials);
 
                 $userModel->save();
@@ -155,11 +157,11 @@ class User extends General {
             } else {
                 if (!(Hash::check($data['current_password'], $password))) {
                     // The passwords matches
-                    return $this->respondWithError('Mật khẩu hiện tại không chính xác.', self::HTTP_METHOD_NOT_ALLOWED);
+                    return $this->respondWithError('The current password is incorrect', self::HTTP_METHOD_NOT_ALLOWED);
                 }
                 if (strcmp($data['current_password'], $data['new_password']) == 0) {
                     //Current password and new password are same
-                    return $this->respondWithError('Mật khẩu mới trùng với mật khẩu hiện tại.', self::HTTP_METHOD_NOT_ALLOWED);
+                    return $this->respondWithError('The current password is incorrect', self::HTTP_METHOD_NOT_ALLOWED);
                 }
                 //Change Password
                 $newPassword = $request->get('new_password');
@@ -189,7 +191,7 @@ class User extends General {
                 $user->password_confirmation = $newPassword;
                 $user->is_activated = 1;
                 $user->reset_password_code = "";
-                $user->forceSave();
+                $user->save();
                 return $this->respondWithMessage("Mật khẩu đã cài đặt thành công. <br>Xin vui lòng quay lại trang đăng nhập và sử dụng mật khẩu mới.");
             } else {
                 return $this->respondWithError('Liên kết mật khẩu đã hết hạn hoặc đã được sử dụng. <br>Xin vui lòng thử lại.', self::HTTP_NOT_FOUND);
@@ -262,6 +264,8 @@ class User extends General {
                 
                 $user->username = $request->get("username");
                 $user->email = $request->get("email");
+                $user->gender = $request->get("gender");
+                $user->dob = $request->get("dob");
                 $user->zil_address = $request->get("zil_address");
                 $user->eth_address = $request->get("eth_address");
                 $user->save();

@@ -5,6 +5,7 @@ namespace Zilliqa\Backend\Console;
 use Illuminate\Console\Command;
 use Zilliqa\Backend\Models\BonusDaily;
 use RainLab\User\Models\User;
+use Zilliqa\Backend\Models\HistoryDaily;
 
 class UpdateDaily extends Command {
 
@@ -31,9 +32,16 @@ class UpdateDaily extends Command {
 
                 //Update Daily for User
                 $user = User::find($userID);
-                {
+                if($user)
+                {                    
                     $user->daily = $user->daily + $bonusDaily;
                     $user->save();
+                    
+                    //Save History Daily
+                    $arrData = [
+                        'user_id' => $user->id, 'daily' => $bonusDaily
+                    ];
+                    HistoryDaily::create($arrData);
                 }
             }
         }

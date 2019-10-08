@@ -303,6 +303,20 @@ class Plugin extends PluginBase {
                         'permissions' => ['zilliqa.backend.*'],
                         'group' => 'History',
                     ],
+                    'historydaily' => [
+                        'label' => 'History Daily',
+                        'icon' => 'icon-history',
+                        'url' => Backend::url('zilliqa/backend/historydaily'),
+                        'permissions' => ['zilliqa.backend.*'],
+                        'group' => 'History',
+                    ],
+                    'historycommission' => [
+                        'label' => 'History Commission',
+                        'icon' => 'icon-history',
+                        'url' => Backend::url('zilliqa/backend/historycommission'),
+                        'permissions' => ['zilliqa.backend.*'],
+                        'group' => 'History',
+                    ],
                     'presenter' => [
                         'label' => 'Commission',
                         'icon' => 'icon-users',
@@ -361,6 +375,7 @@ class Plugin extends PluginBase {
             'zilliqa.api::mail.withdraw' => 'Confirm WithDraw',
             'zilliqa.api::mail.activedeposit' => 'Active Deposit',
             'zilliqa.api::mail.activewithdraw' => 'Active WithDraw',
+            'zilliqa.api::mail.resetpassword' => 'Reset Password',
         ];
     }
     

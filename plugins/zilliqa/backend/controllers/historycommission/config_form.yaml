@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: History Commission
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/historycommission/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\HistoryCommission
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/historycommission
+
+# Create page
+create:
+    title: Create History Commission
+    redirect: zilliqa/backend/historycommission/update/:id
+    redirectClose: zilliqa/backend/historycommission
+
+# Update page
+update:
+    title: Edit History Commission
+    redirect: zilliqa/backend/historycommission
+    redirectClose: zilliqa/backend/historycommission
+
+# Preview page
+preview:
+    title: Preview History Commission

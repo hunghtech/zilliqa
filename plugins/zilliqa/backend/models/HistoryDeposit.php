@@ -73,25 +73,28 @@ class HistoryDeposit extends Model {
             if ($bonusZil > 0) {
                 $user = User::find($this->user_id);
                 if ($user) {
-                    $zilliqa_minimum = $bonusZil/10;
+                    $zilliqa_minimum = $bonusZil / 10;
                     $user->zilliqa = $user->zilliqa + $bonusZil;
+                    $user->lending = $user->lending + $package;
                     $user->zilliqa_minimum = $user->zilliqa_minimum + $zilliqa_minimum;
                     $user->save();
                 }
             }
 
             //Update Commission for User
-            $commission = $package/10;
-            $presenter = Presenter::where('user_id',$this->user_id)->first();
-            if($presenter){
+            $commission = $package / 10;
+            $presenter = Presenter::where('user_id', $this->user_id)->first();
+            if ($presenter) {
                 $presenterID = $presenter->user_present;
-                $presenter->business_volume = $presenter->business_volume +  $commission;
-                $presenter->save();
+                /*$presenter->business_volume = $presenter->business_volume + $commission;
+                $presenter->save();*/
 
 
                 $user = User::find($presenterID);
-                $user->commission = $user->commission + $commission;
-                $user->save();
+                if ($user) {
+                    $user->commission = $user->commission + $commission;
+                    $user->save();
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ namespace Zilliqa\API\Controllers;
 use Illuminate\Http\Request;
 use Zilliqa\Backend\Models\HistoryDeposit;
 use Zilliqa\Backend\Models\HistoryWithDraw;
+use Zilliqa\Backend\Models\HistoryDaily;
+use Zilliqa\Backend\Models\HistoryCommission;
 use Validator;
 use JWTAuth;
 
@@ -13,11 +15,13 @@ use JWTAuth;
  */
 class History extends General {
 
-    protected $depositRepository, $withDrawRepository;
+    protected $depositRepository, $withDrawRepository, $dailyRepository, $commissionRepository;
 
-    public function __construct(HistoryDeposit $deposit, HistoryWithDraw $withdraw) {
+    public function __construct(HistoryDeposit $deposit, HistoryWithDraw $withdraw, HistoryDaily $daily, HistoryCommission $commission) {
         $this->depositRepository = $deposit;
         $this->withDrawRepository = $withdraw;
+        $this->dailyRepository = $daily;
+        $this->commissionRepository = $commission;
     }
 
     /**
@@ -59,6 +63,50 @@ class History extends General {
             $paginateArr['total_pages'] = $withDrawListPagination['last_page'];
 
             return $this->respondWithDataPaging($withDrawListData, $paginateArr);
+        } catch (\Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+    
+     /**
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function historyDaily(Request $request) {
+        try {
+            $dailyListPagination = $this->dailyRepository->getAllFilter($request);
+            $dailyListData = $dailyListPagination['data'];
+
+            //Paging object
+            $paginateArr = [];
+            $paginateArr['total_item'] = $dailyListPagination['total'];
+            $paginateArr['per_page'] = $dailyListPagination['per_page'];
+            $paginateArr['current_page'] = $dailyListPagination['current_page'];
+            $paginateArr['total_pages'] = $dailyListPagination['last_page'];
+
+            return $this->respondWithDataPaging($dailyListData, $paginateArr);
+        } catch (\Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+    
+    /**
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function historyCommission(Request $request) {
+        try {
+            $commissionListPagination = $this->commissionRepository->getAllFilter($request);
+            $commissionListData = $commissionListPagination['data'];
+
+            //Paging object
+            $paginateArr = [];
+            $paginateArr['total_item'] = $commissionListPagination['total'];
+            $paginateArr['per_page'] = $commissionListPagination['per_page'];
+            $paginateArr['current_page'] = $commissionListPagination['current_page'];
+            $paginateArr['total_pages'] = $commissionListPagination['last_page'];
+
+            return $this->respondWithDataPaging($commissionListData, $paginateArr);
         } catch (\Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
