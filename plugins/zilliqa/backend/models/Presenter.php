@@ -69,4 +69,44 @@ class Presenter extends Model
     public function getDownlineMember($user_id){
         return $this->where('user_id',$user_id)->orWhere('parent_present',$user_id)->get();
     }
+
+    public function showCategories($categories, $parent_id = 0, $char = '', $stt = 0)
+    {
+        // BƯỚC 2.1: LẤY DANH SÁCH CATE CON
+        $cate_child = array();
+        foreach ($categories as $key => $item)
+        {
+            // Nếu là chuyên mục con thì hiển thị
+            if ($item['parent_id'] == $parent_id)
+            {
+                $cate_child[] = $item;
+                unset($categories[$key]);
+            }
+        }
+
+        // BƯỚC 2.2: HIỂN THỊ DANH SÁCH CHUYÊN MỤC CON NẾU CÓ
+        if ($cate_child)
+        {
+            if ($stt == 0){
+                // là cấp 1
+            }
+            else if ($stt == 1){
+                // là cấp 2
+            }
+            else if ($stt == 2){
+                // là cấp 3
+            }
+
+            echo '<ul>';
+            foreach ($cate_child as $key => $item)
+            {
+                // Hiển thị tiêu đề chuyên mục
+                echo '<li>'.$item['title'];
+                // Tiếp tục đệ quy để tìm chuyên mục con của chuyên mục đang lặp
+                showCategories($categories, $item['id'], $char.'|---', ++$stt);
+                echo '</li>';
+            }
+            echo '</ul>';
+        }
+    }
 }
