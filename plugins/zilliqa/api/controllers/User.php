@@ -11,6 +11,7 @@ use JWTAuth;
 use Zilliqa\Api\Repository\UserExtendRepository;
 use Zilliqa\Backend\Models\Presenter;
 use Zilliqa\Backend\Models\Country;
+use Zilliqa\Backend\Models\UserLending;
 use Lang;
 
 /**
@@ -22,14 +23,16 @@ class User extends General {
             $token, $userGroupRepository,
             $presenterRepository,
             $countryRepository,
+            $userLendingRepository,
             $userExtendRepository;
 
-    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserExtendRepository $userExtend, Country $country) {
+    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserLending $userLending,UserExtendRepository $userExtend, Country $country) {
         $this->userRepository = $user;
         $this->userGroupRepository = $userGroup;
         $this->presenterRepository = $presenter;
         $this->userExtendRepository = $userExtend;
         $this->countryRepository = $country;
+        $this->userLendingRepository = $userLending;
         $this->token = JWTAuth::getToken();
     }
 
@@ -40,7 +43,7 @@ class User extends General {
      */
     public function login(Request $request) {
         try {
-            $now = date('Y-m-d H:i:s');            
+            $now = date('Y-m-d H:i:s');
             $username = $request->get('username');
             $password = $request->get('password');
             $credentials = $request->only('username', 'password');
@@ -261,7 +264,7 @@ class User extends General {
                 } else {
                     $user->fill($request->all(['username', 'email','zil_address','eth_address']));
                 }*/
-                
+
                 $user->username = $request->get("username");
                 $user->email = $request->get("email");
                 $user->gender = $request->get("gender");
@@ -297,7 +300,7 @@ class User extends General {
      * @return \Illuminate\Http\Response
      */
     public function detail() {
-        try {            
+        try {
             $user = JWTAuth::parseToken()->authenticate();
             if($user)
                 return $this->respondWithData($user->toArray());
@@ -333,13 +336,26 @@ class User extends General {
             if($user){
                 $userID = $user->id;
                 $list = $this->presenterRepository->where('user_present',$userID)->get();
+                foreach($list as $item){
+                    $userID = $item->user_id;
+                    $downlineMembers = $this->presenterRepository->getDownlineMember($userID);
+                    $item->downlineMember = count($downlineMembers);
+                    $businessVolume = 0;
+                    if($downlineMembers){
+                        foreach($downlineMembers as $member){
+                            $memberID = $member->user_id;
+                            $businessVolume = $this->userLendingRepository->getUserLendings($memberID);
+                        }
+                    }
+                    $item->businessVolume = $businessVolume;
+                }
                 return $this->respondWithData($list);
             }
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -350,7 +366,7 @@ class User extends General {
             $user = $this->userRepository->where('activation_code',$token)->first();
             if($user){
                 $user->is_activated = 1;
-                $user->activation_code = "";       
+                $user->activation_code = "";
                 $user->save();
                 return $this->respondWithData($user);
             }
@@ -358,7 +374,7 @@ class User extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
-    
+
+
 
 }

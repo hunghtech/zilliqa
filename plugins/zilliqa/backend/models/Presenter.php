@@ -33,6 +33,7 @@ class Presenter extends Model
      */
     public $hasOne = [];
     public $hasMany = [];
+    public $belongsTo = [];
     public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
@@ -56,12 +57,16 @@ class Presenter extends Model
         $users = User::where('id', $this->user_present)->get()->toArray();
         return $users;
     }
-    
+
     public static function getReferralLevel($user_id){
         return self::where('user_present',$user_id)->count();
     }
-    
+
     public static function getCommissionReferralLevel($user_id){
         return self::where('user_present',$user_id)->count();
+    }
+
+    public function getDownlineMember($user_id){
+        return $this->where('user_id',$user_id)->orWhere('parent_present',$user_id)->get();
     }
 }

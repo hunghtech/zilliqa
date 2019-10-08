@@ -20,7 +20,7 @@ Route::group([
         Route::post('changePassword', 'Zilliqa\Api\Controllers\User@changePassword')->name('user.changePassword');
         Route::get('logout', 'Zilliqa\Api\Controllers\User@logout')->name('user.logOut');
         Route::get('me', 'Zilliqa\Api\Controllers\User@detail')->name('user.detail');
-        Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
+        Route::post('editget-list-referal', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
         Route::get('get-list-referal', 'Zilliqa\Api\Controllers\User@getListReferal');
     });
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {
