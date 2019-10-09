@@ -44,7 +44,7 @@ class Presenter extends Model {
     public $attachOne = [];
     public $attachMany = [];
 
-    protected $appends = ['user_referal'];
+    protected $appends = ['user'];
 
     /**
      * @return mixed
@@ -73,34 +73,6 @@ class Presenter extends Model {
     public function getDownlineMember($user_id) {
         return $this->where('user_id', $user_id)->orWhere('parent_present', $user_id)->get();
     }
-
-    /* public function showTreePresent($data, $parent_id = 0) {
-      $cate_child = array();
-      $this->index = $this->index + 1;
-      $result = [];
-      foreach ($data as $key => $item) {
-      if ($item['parent_present'] == $parent_id) {
-      $cate_child[] = $item;
-      $result[] = $item;
-      unset($data[$key]);
-      }
-      }
-      if ($cate_child) {
-      foreach ($cate_child as $item) {
-      //$arrParent = ["parent_id" => $item['parent_present']];
-      //$arrChildren[$this->index][$item['parent_present']] = ['id' => $item['id'], 'user_id' => $item['user_id']];
-      $this->showTreePresent($data, $item['id']);
-      $result = array_merge($item, $item);
-      }
-      //$this->arrData[$this->index] = ['parent' => $arrParent, 'children' => $arrChildren];
-      }
-      if($this->index == 5){
-      echo "<prev>";
-      print_r($result);
-      echo "</prev>";
-      }
-      return $this->arrData;
-      } */
 
     function showTreePresent($data, $parent_id = 0, $level = 0) {
         $result = [];

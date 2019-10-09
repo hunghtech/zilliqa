@@ -12,6 +12,7 @@ use Zilliqa\Api\Repository\UserExtendRepository;
 use Zilliqa\Backend\Models\Presenter;
 use Zilliqa\Backend\Models\Country;
 use Zilliqa\Backend\Models\UserLending;
+use Zilliqa\Backend\Models\Lending;
 use Lang;
 
 /**
@@ -23,16 +24,20 @@ class User extends General {
             $token, $userGroupRepository,
             $presenterRepository,
             $countryRepository,
+            $lendingRepository,
             $userLendingRepository,
             $userExtendRepository;
 
-    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserLending $userLending, UserExtendRepository $userExtend, Country $country) {
+    public function __construct(UserModel $user, UserGroup $userGroup,
+                                Presenter $presenter, UserLending $userLending,
+                                UserExtendRepository $userExtend, Country $country,Lending $lending) {
         $this->userRepository = $user;
         $this->userGroupRepository = $userGroup;
         $this->presenterRepository = $presenter;
         $this->userExtendRepository = $userExtend;
         $this->countryRepository = $country;
         $this->userLendingRepository = $userLending;
+        $this->lendingRepository = $lending;
         $this->token = JWTAuth::getToken();
     }
 
@@ -337,13 +342,48 @@ class User extends General {
                 $userID = $user->id;
                 $list = $this->presenterRepository->get()->toArray();
                 $result = $this->presenterRepository->showTreePresent($list);
-                $listReferal = $this->search($result, 'user_present', $userID);
-                $downlineMember = $this->search($result, 'user_root', $userID);
-                $returnData = [];
-                $returnData['listReferal'] = $listReferal;
-                $returnData['downlineMember'] = $downlineMember;
+                $returnData = $this->search($result, 'user_root', $userID);
+                $returnData = $this->search($result, 'level', 1);
                 return $this->respondWithData($returnData);
             }
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDownlineMember(Request $request) {
+        try {
+            $user_root = $request->get('user_parent');
+            $list = $this->presenterRepository->get()->toArray();
+            $result = $this->presenterRepository->showTreePresent($list);
+            $downlineMember = $this->search($result, 'user_parent', $user_root);
+            $ids = [];
+
+            //Foreach downline number
+            if($downlineMember){
+                foreach($downlineMember as $member){
+                    array_push($ids, $member['user_id']);
+                }
+            }
+
+            //Calculate Total lending
+            $userLending = $this->userLendingRepository->whereIn('user_id',$ids)->get();
+            $lending = 0;
+            if($userLending){
+                foreach($userLending as $item){
+                    $lendingData = $this->lendingRepository->find($item->lending_id);
+                    $lending += $lendingData->title;
+                }
+            }
+
+            $returnData['downlineMember'] = $downlineMember;
+            $returnData['totalLending'] = $lending;
+
+            return $this->respondWithData($returnData);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
