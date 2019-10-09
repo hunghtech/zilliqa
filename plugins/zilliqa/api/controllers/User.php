@@ -26,7 +26,7 @@ class User extends General {
             $userLendingRepository,
             $userExtendRepository;
 
-    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserLending $userLending,UserExtendRepository $userExtend, Country $country) {
+    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserLending $userLending, UserExtendRepository $userExtend, Country $country) {
         $this->userRepository = $user;
         $this->userGroupRepository = $userGroup;
         $this->presenterRepository = $presenter;
@@ -113,7 +113,7 @@ class User extends General {
                 return $this->respondWithError($validator->errors(), self::HTTP_INTERNAL_SERVER_ERROR);
             } else {
                 //Create User
-                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id','gender','dob');
+                $credentials = $request->only('name', 'username', 'email', 'password', 'password_confirmation', 'country_id', 'gender', 'dob');
                 $userModel = UserModel::create($credentials);
 
                 $userModel->save();
@@ -258,12 +258,12 @@ class User extends General {
                 //Update User
                 $user = $this->userRepository->find($user_id);
 
-                /*$password = $request->get('password');
-                if (!empty($password)) {
-                    $user->fill($request->all(['username', 'email', 'password', 'password_confirmation']));
-                } else {
-                    $user->fill($request->all(['username', 'email','zil_address','eth_address']));
-                }*/
+                /* $password = $request->get('password');
+                  if (!empty($password)) {
+                  $user->fill($request->all(['username', 'email', 'password', 'password_confirmation']));
+                  } else {
+                  $user->fill($request->all(['username', 'email','zil_address','eth_address']));
+                  } */
 
                 $user->username = $request->get("username");
                 $user->email = $request->get("email");
@@ -302,7 +302,7 @@ class User extends General {
     public function detail() {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            if($user)
+            if ($user)
                 return $this->respondWithData($user->toArray());
             else
                 return $this->respondWithData();
@@ -333,23 +333,16 @@ class User extends General {
     public function getListReferal() {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            if($user){
+            if ($user) {
                 $userID = $user->id;
-                $list = $this->presenterRepository->where('user_present',$userID)->get();
-                foreach($list as $item){
-                    $userID = $item->user_id;
-                    $downlineMembers = $this->presenterRepository->getDownlineMember($userID);
-                    $item->downlineMember = count($downlineMembers);
-                    $businessVolume = 0;
-                    if($downlineMembers){
-                        foreach($downlineMembers as $member){
-                            $memberID = $member->user_id;
-                            $businessVolume = $this->userLendingRepository->getUserLendings($memberID);
-                        }
-                    }
-                    $item->businessVolume = $businessVolume;
-                }
-                return $this->respondWithData($list);
+                $list = $this->presenterRepository->get()->toArray();
+                $result = $this->presenterRepository->showTreePresent($list);
+                $listReferal = $this->search($result, 'user_present', $userID);
+                $downlineMember = $this->search($result, 'user_root', $userID);
+                $returnData = [];
+                $returnData['listReferal'] = $listReferal;
+                $returnData['downlineMember'] = $downlineMember;
+                return $this->respondWithData($returnData);
             }
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
@@ -363,8 +356,8 @@ class User extends General {
     public function confirmRegister(Request $request) {
         try {
             $token = $request->get('token');
-            $user = $this->userRepository->where('activation_code',$token)->first();
-            if($user){
+            $user = $this->userRepository->where('activation_code', $token)->first();
+            if ($user) {
                 $user->is_activated = 1;
                 $user->activation_code = "";
                 $user->save();
@@ -375,6 +368,20 @@ class User extends General {
         }
     }
 
+    protected function search($array, $key, $value) {
+        $results = array();
 
+        if (is_array($array)) {
+            if (isset($array[$key]) && $array[$key] == $value) {
+                $results[] = $array;
+            }
+
+            foreach ($array as $subarray) {
+                $results = array_merge($results, $this->search($subarray, $key, $value));
+            }
+        }
+
+        return $results;
+    }
 
 }
