@@ -96,28 +96,30 @@ class HistoryDeposit extends Model {
             if ($allowLevel < 6) {
                 $referralList = $this->search($result, 'user_root', $presenterID);
                 $referral = $this->search($referralList, 'user_id', $this->user_id);
-                $level = $referral[0]['level'];
-                if ($level <= $allowLevel) {
-                    $percentCommission = Setting::get('percent_f' . $level);
-                    $commission = ($percentCommission * $package) / 100;
-                    
-                    //Update Business Volume
-                    $presenterList->business_volume = $package;
-                    $presenterList->save();
-                    
-                    //Save History Commission
-                    $arrData = [
-                        'user_id' => $this->user_id, 'commission' => $commission
-                    ];
-                    HistoryCommission::create($arrData);
-                    
-                    //Update Commission for user
-                    $user = User::find($presenterID);
-                    if ($user) {
-                        $user->commission = $user->commission + $commission;
-                        $user->save();
+                if(isset($referral)){
+                    $level = $referral[0]['level'];
+                    if ($level <= $allowLevel) {
+                        $percentCommission = Setting::get('percent_f' . $level);
+                        $commission = ($percentCommission * $package) / 100;
+
+                        //Update Business Volume
+                        $presenterList->business_volume = $package;
+                        $presenterList->save();
+
+                        //Save History Commission
+                        $arrData = [
+                            'user_id' => $this->user_id, 'commission' => $commission
+                        ];
+                        HistoryCommission::create($arrData);
+
+                        //Update Commission for user
+                        $user = User::find($presenterID);
+                        if ($user) {
+                            $user->commission = $user->commission + $commission;
+                            $user->save();
+                        }
                     }
-                }
+                }                
             }
         }
     }
