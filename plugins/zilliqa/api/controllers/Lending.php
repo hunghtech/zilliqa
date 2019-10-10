@@ -19,7 +19,7 @@ class Lending extends General {
     public function __construct(LendingModel $lendingModel, UserLending $userLendingModel, HistoryDeposit $deposit) {
         $this->lendingRepository = $lendingModel;
         $this->userLendingRepository = $userLendingModel;
-		$this->depositRepository = $deposit;
+        $this->depositRepository = $deposit;
     }
 
     /**
@@ -45,7 +45,7 @@ class Lending extends General {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user) {
                 $userId = $user->id;
-                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id',$userId)->get();
+                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->get();
                 return $this->respondWithData($lendingList);
             }
         } catch (Exception $e) {
@@ -62,6 +62,23 @@ class Lending extends General {
             $data = Setting::get('eth');
 
             return $this->respondWithData($data);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkLendingStatus() {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            if ($user) {
+                $userId = $user->id;
+                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->first();
+                return $this->respondWithData($lendingList);
+            }
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }

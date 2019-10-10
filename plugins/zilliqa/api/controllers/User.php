@@ -128,12 +128,13 @@ class User extends General {
                 $presenterID = $presenter['id'];
                 $parentPresent = 0;
 
-                $data = $this->presenterRepository->where('user_present', $presenterID)->first();
+                $userID = $userModel->id;
+                $data = $this->presenterRepository->where('user_id',$presenterID)->first();
                 if ($data) {
-                    $parentPresent = $data->parent_present;
+                    $parentPresent = $data->id;
                 }
                 $arrPresenter = [
-                    'user_id' => $userModel->id, 'user_present' => $presenterID, 'parent_present' => $parentPresent
+                    'user_id' => $userID, 'user_present' => $presenterID, 'parent_present' => $parentPresent
                 ];
                 $this->presenterRepository->create($arrPresenter);
 
@@ -263,13 +264,6 @@ class User extends General {
                 //Update User
                 $user = $this->userRepository->find($user_id);
 
-                /* $password = $request->get('password');
-                  if (!empty($password)) {
-                  $user->fill($request->all(['username', 'email', 'password', 'password_confirmation']));
-                  } else {
-                  $user->fill($request->all(['username', 'email','zil_address','eth_address']));
-                  } */
-
                 $user->username = $request->get("username");
                 $user->email = $request->get("email");
                 $user->gender = $request->get("gender");
@@ -361,27 +355,27 @@ class User extends General {
             $list = $this->presenterRepository->get()->toArray();
             $result = $this->presenterRepository->showTreePresent($list);
             $downlineMember = $this->search($result, 'user_parent', $user_root);
-            $ids = [];
+            //$ids = [];
 
             //Foreach downline number
-            if($downlineMember){
-                foreach($downlineMember as $member){
-                    array_push($ids, $member['user_id']);
-                }
-            }
-
-            //Calculate Total lending
-            $userLending = $this->userLendingRepository->whereIn('user_id',$ids)->get();
-            $lending = 0;
-            if($userLending){
-                foreach($userLending as $item){
-                    $lendingData = $this->lendingRepository->find($item->lending_id);
-                    $lending += $lendingData->title;
-                }
-            }
+//            if($downlineMember){
+//                foreach($downlineMember as $member){
+//                    array_push($ids, $member['user_id']);
+//                }
+//            }
+//
+//            //Calculate Total lending
+//            $userLending = $this->userLendingRepository->whereIn('user_id',$ids)->get();
+//            $lending = 0;
+//            if($userLending){
+//                foreach($userLending as $item){
+//                    $lendingData = $this->lendingRepository->find($item->lending_id);
+//                    $lending += $lendingData->title;
+//                }
+//            }
 
             $returnData['downlineMember'] = $downlineMember;
-            $returnData['totalLending'] = $lending;
+            //$returnData['totalLending'] = $lending;
 
             return $this->respondWithData($returnData);
         } catch (Exception $e) {

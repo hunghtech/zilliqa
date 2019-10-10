@@ -20,13 +20,14 @@ Route::group([
         Route::post('changePassword', 'Zilliqa\Api\Controllers\User@changePassword')->name('user.changePassword');
         Route::get('logout', 'Zilliqa\Api\Controllers\User@logout')->name('user.logOut');
         Route::get('me', 'Zilliqa\Api\Controllers\User@detail')->name('user.detail');
-        Route::post('editget-list-referal', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
+        Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
         Route::get('get-list-referal', 'Zilliqa\Api\Controllers\User@getListReferal');
         Route::post('get-downline-member', 'Zilliqa\Api\Controllers\User@getDownlineMember');
     });
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {
         Route::get('/', 'Zilliqa\Api\Controllers\Lending@listAll')->name('lending.list');
         Route::get('/subscription', 'Zilliqa\Api\Controllers\Lending@subscription')->name('lending.subscription');
+        Route::get('/check-lending-status', 'Zilliqa\Api\Controllers\Lending@checkLendingStatus')->name('lending.checkLendingStatus');
     });
 
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('history')->group(function () {

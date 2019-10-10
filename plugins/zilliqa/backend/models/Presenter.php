@@ -23,7 +23,7 @@ class Presenter extends Model {
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['user_id', 'user_present'];
+    protected $fillable = ['user_id', 'user_present','parent_present'];
     protected $hidden = ['updated_at'];
 
     /**
@@ -62,11 +62,7 @@ class Presenter extends Model {
         return $users;
     }
 
-    public static function getReferralLevel($user_id) {
-        return self::where('user_present', $user_id)->count();
-    }
-
-    public static function getCommissionReferralLevel($user_id) {
+    public function getReferralLevel($user_id) {
         return self::where('user_present', $user_id)->count();
     }
 

@@ -8,6 +8,8 @@ use Zilliqa\Backend\Models\Lending;
 use JWTAuth;
 use Zilliqa\Backend\Models\UserLending;
 use Zilliqa\Backend\Models\Presenter;
+use Zilliqa\Backend\Models\Setting;
+use Zilliqa\Backend\Models\HistoryCommission;
 
 /**
  * Model
@@ -81,19 +83,40 @@ class HistoryDeposit extends Model {
                 }
             }
 
+            $presenter = new Presenter();
+            //Get List Referal
+            $list = $presenter->get()->toArray();
+            $result = $presenter->showTreePresent($list);
+            $presenterList = $presenter->where('user_id', $this->user_id)->first();
+
+            $presenterID = $presenterList->user_present;
+            $allowLevel = $presenter->getReferralLevel($presenterID);
+
             //Update Commission for User
-            $commission = $package / 10;
-            $presenter = Presenter::where('user_id', $this->user_id)->first();
-            if ($presenter) {
-                $presenterID = $presenter->user_present;
-                /*$presenter->business_volume = $presenter->business_volume + $commission;
-                $presenter->save();*/
-
-
-                $user = User::find($presenterID);
-                if ($user) {
-                    $user->commission = $user->commission + $commission;
-                    $user->save();
+            if ($allowLevel < 6) {
+                $referralList = $this->search($result, 'user_root', $presenterID);
+                $referral = $this->search($referralList, 'user_id', $this->user_id);
+                $level = $referral[0]['level'];
+                if ($level <= $allowLevel) {
+                    $percentCommission = Setting::get('percent_f' . $level);
+                    $commission = ($percentCommission * $package) / 100;
+                    
+                    //Update Business Volume
+                    $presenterList->business_volume = $package;
+                    $presenterList->save();
+                    
+                    //Save History Commission
+                    $arrData = [
+                        'user_id' => $this->user_id, 'commission' => $commission
+                    ];
+                    HistoryCommission::create($arrData);
+                    
+                    //Update Commission for user
+                    $user = User::find($presenterID);
+                    if ($user) {
+                        $user->commission = $user->commission + $commission;
+                        $user->save();
+                    }
                 }
             }
         }
@@ -129,6 +152,22 @@ class HistoryDeposit extends Model {
         $result = $depositModel->paginate($perPage)->toArray();
 
         return $result;
+    }
+
+    protected function search($array, $key, $value) {
+        $results = array();
+
+        if (is_array($array)) {
+            if (isset($array[$key]) && $array[$key] == $value) {
+                $results[] = $array;
+            }
+
+            foreach ($array as $subarray) {
+                $results = array_merge($results, $this->search($subarray, $key, $value));
+            }
+        }
+
+        return $results;
     }
 
 }
