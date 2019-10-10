@@ -7,6 +7,7 @@ use Zilliqa\Backend\Models\HistoryDeposit;
 use Zilliqa\Backend\Models\HistoryWithDraw;
 use Zilliqa\Backend\Models\HistoryDaily;
 use Zilliqa\Backend\Models\HistoryCommission;
+use RainLab\User\Models\User;
 use Validator;
 use JWTAuth;
 
@@ -15,13 +16,14 @@ use JWTAuth;
  */
 class History extends General {
 
-    protected $depositRepository, $withDrawRepository, $dailyRepository, $commissionRepository;
+    protected $depositRepository, $withDrawRepository, $dailyRepository, $commissionRepository, $userRepository;
 
-    public function __construct(HistoryDeposit $deposit, HistoryWithDraw $withdraw, HistoryDaily $daily, HistoryCommission $commission) {
+    public function __construct(HistoryDeposit $deposit, HistoryWithDraw $withdraw, HistoryDaily $daily, HistoryCommission $commission, User $user) {
         $this->depositRepository = $deposit;
         $this->withDrawRepository = $withdraw;
         $this->dailyRepository = $daily;
         $this->commissionRepository = $commission;
+        $this->userRepository = $user;
     }
 
     /**
@@ -174,7 +176,8 @@ class History extends General {
             if($deposit){
                 $deposit->status = 1;
                 $deposit->save();
-                $user = JWTAuth::parseToken()->authenticate();
+                $userID = $deposit->user_id;
+                $user = $this->userRepository->find($userID);
                 $this->sendMailAdminActiveDeposit($user, $deposit);
                 return $this->respondWithData($deposit);
             }
@@ -194,7 +197,8 @@ class History extends General {
             if($withDraw){
                 $withDraw->status = 1;
                 $withDraw->save();
-                $user = JWTAuth::parseToken()->authenticate();
+                $userID = $withDraw->user_id;
+                $user = $this->userRepository->find($userID);
                 $this->sendMailAdminActiveWithDraw($user, $withDraw);
                 return $this->respondWithData($withDraw);
             }
