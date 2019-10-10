@@ -17,6 +17,7 @@ class Plugin extends PluginBase {
 
     private $isNew = false;
     private $activation_code = "";
+    private $sendEmail = false;
     /**
      * Returns information about this plugin.
      *
@@ -51,13 +52,13 @@ class Plugin extends PluginBase {
         });
 
         $this->commands('zilliqa:updatedaily');
-        
+
         $this->app->singleton('zilliqa:updatezil', function() {
             return new \Zilliqa\Backend\Console\UpdateZil;
         });
 
         $this->commands('zilliqa:updatezil');
-        
+
         //Extend user Model
         UserModel::extend(function($model) {
             $model->hasMany['deposit'] = ['\Zilliqa\Backend\Models\HistoryDeposit', 'key' => 'user_id'];
@@ -212,7 +213,8 @@ class Plugin extends PluginBase {
             }
         });
         UserModel::saved(function($model) {
-            if ($this->isNew) {
+            if ($this->isNew && !$this->sendEmail) {
+                $this->sendEmail = true;
                 $logo = url('/')."/plugins/zilliqa/api/assets/images/logo.png";
                 $link = "http://zilliqa-network.com/confirm-register?token=".$this->activation_code;
                 $params = [
@@ -222,7 +224,7 @@ class Plugin extends PluginBase {
                 ];
                 Mail::sendTo($model->email, 'rainlab.user::mail.activate', $params);
             }
-        });                
+        });
     }
 
     /**
@@ -368,7 +370,7 @@ class Plugin extends PluginBase {
         }
         return $str;
     }
-    
+
     public function registerMailTemplates() {
         return [
             'zilliqa.api::mail.deposit' => 'Confirm Deposit',
@@ -378,7 +380,7 @@ class Plugin extends PluginBase {
             'zilliqa.api::mail.resetpassword' => 'Reset Password',
         ];
     }
-    
+
     public function registerSchedule($schedule)
     {
         $schedule->command('zilliqa:updatedaily')->dailyAt('01:00');

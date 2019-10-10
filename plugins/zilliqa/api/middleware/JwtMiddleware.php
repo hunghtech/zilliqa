@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Middleware\BaseMiddleware;
 use Illuminate\Http\Response;
 
 class JwtMiddleware extends BaseMiddleware {
-    
+
     protected $statusCode = Response::HTTP_OK;
 
     /**
@@ -21,23 +21,23 @@ class JwtMiddleware extends BaseMiddleware {
     public function handle($request, \Closure $next)
     {
         if (! $token = $this->auth->setRequest($request)->getToken()) {
-            return $this->respondWithError("Tài khoản không tồn tại. <br>Xin vui lòng thử lại.", Response::HTTP_BAD_REQUEST);
+            return $this->respondWithError("Account does not exist. Please try again!", Response::HTTP_BAD_REQUEST);
         }
         try {
             $user = $this->auth->authenticate($token);
         } catch (TokenExpiredException $e) {
-            return $this->respondWithError("Phiên làm việc đã hết hạn. <br>Xin vui lòng đăng nhập lại.", $e->getStatusCode());
+            return $this->respondWithError("Token expired. Please login again!", $e->getStatusCode());
         } catch (JWTException $e) {
-            return $this->respondWithError("Phiên làm việc đã hết hạn. <br>Xin vui lòng đăng nhập lại.", $e->getStatusCode());
+            return $this->respondWithError("Token expired. Please login again!", $e->getStatusCode());
         }
         if (! $user) {
-            return $this->respondWithError("Tài khoản không tồn tại. <br>Xin vui lòng thử lại.", $e->getStatusCode());
+            return $this->respondWithError("Account does not exist. Please try again!", $e->getStatusCode());
         }
         $this->events->fire('tymon.jwt.valid', $user);
 
         return $next($request);
     }
-    
+
     protected function respondWithError($message = null, $statusCode = null) {
         $this->statusCode = $statusCode;
         $response = [

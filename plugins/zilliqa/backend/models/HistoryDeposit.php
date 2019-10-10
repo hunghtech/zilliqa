@@ -96,7 +96,7 @@ class HistoryDeposit extends Model {
             if ($allowLevel < 6) {
                 $referralList = $this->search($result, 'user_root', $presenterID);
                 $referral = $this->search($referralList, 'user_id', $this->user_id);
-                if(isset($referral)){
+                if(count($referral) > 0){
                     $level = $referral[0]['level'];
                     if ($level <= $allowLevel) {
                         $percentCommission = Setting::get('percent_f' . $level);
@@ -119,7 +119,7 @@ class HistoryDeposit extends Model {
                             $user->save();
                         }
                     }
-                }                
+                }
             }
         }
     }
