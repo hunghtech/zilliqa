@@ -39,6 +39,8 @@ Route::group([
         Route::post('/store/with-draw', 'Zilliqa\Api\Controllers\History@storeWithDraw')->name('withdraw.store');
         Route::post('/update/deposit', 'Zilliqa\Api\Controllers\History@updateDeposit')->name('update.deposit');
         Route::post('/update/with-draw', 'Zilliqa\Api\Controllers\History@updateWithDraw')->name('update.withdraw');
+        Route::post('/delete-deposit', 'Zilliqa\Api\Controllers\History@deleteDeposit')->name('delete.deposit');
+        Route::post('/delete-with-draw', 'Zilliqa\Api\Controllers\History@deleteWithDraw')->name('delete.withDraw');
     });
 
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('business')->group(function () {

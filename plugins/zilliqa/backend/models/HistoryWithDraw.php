@@ -21,7 +21,7 @@ class HistoryWithDraw extends Model {
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['user_id', 'coint', 'amount', 'status', 'type'];
+    protected $fillable = ['user_id', 'coint', 'amount', 'status', 'type','eth_convert','wallet_address'];
 
     /**
      * @var array Validation rules
@@ -44,24 +44,6 @@ class HistoryWithDraw extends Model {
     public function getUserIdOptions() {
         $users = User::lists('name', 'id');
         return $users;
-    }
-
-    public function afterSave() {
-        if ($this->status == 2) {
-            $user = User::find($this->user_id);
-            $amount = $this->amount;
-            if ($user) {
-                if ($this->type == 1) {
-                    $user->zilliqa = $user->zilliqa - $amount;
-                    $user->zilliqa_minimum = $user->zilliqa_minimum - $amount;
-                } elseif ($this->type == 2) {
-                    $user->daily = $user->daily - $amount;                    
-                } else {
-                    $user->commission = $user->commission - $amount;                    
-                }
-                $user->save();
-            }
-        }
     }
 
     /**

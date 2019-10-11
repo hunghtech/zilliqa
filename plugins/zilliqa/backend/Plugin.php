@@ -178,11 +178,8 @@ class Plugin extends PluginBase {
                 'user_code' => [
                     'label' => 'User Code'
                 ],
-                'zil_address' => [
-                    'label' => 'ZIL Address'
-                ],
-                'eth_address' => [
-                    'label' => 'ETH Address'
+                'username' => [
+                    'label' => 'Username'
                 ],
                 'daily' => [
                     'label' => 'Daily'
@@ -288,6 +285,13 @@ class Plugin extends PluginBase {
                         'label' => 'Bonus Daily',
                         'icon' => 'icon-money',
                         'url' => Backend::url('zilliqa/backend/bonusdaily'),
+                        'permissions' => ['zilliqa.backend.*'],
+                        'group' => 'Zilliqa',
+                    ],
+                    'userlending' => [
+                        'label' => 'User Lending',
+                        'icon' => 'icon-sitemap',
+                        'url' => Backend::url('zilliqa/backend/userlending'),
                         'permissions' => ['zilliqa.backend.*'],
                         'group' => 'Zilliqa',
                     ],

@@ -25,3 +25,7 @@ fields:
         size: huge
         span: auto
         type: textarea
+    is_update_lending:
+        label: 'Update Lending'
+        span: auto
+        type: switch

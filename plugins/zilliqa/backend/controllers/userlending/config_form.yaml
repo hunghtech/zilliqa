@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: User Lending
+
+# Model Form Field configuration
+form: $/zilliqa/backend/models/userlending/fields.yaml
+
+# Model Class name
+modelClass: Zilliqa\Backend\Models\UserLending
+
+# Default redirect location
+defaultRedirect: zilliqa/backend/userlending
+
+# Create page
+create:
+    title: Create User Lending
+    redirect: zilliqa/backend/userlending/update/:id
+    redirectClose: zilliqa/backend/userlending
+
+# Update page
+update:
+    title: Edit User Lending
+    redirect: zilliqa/backend/userlending
+    redirectClose: zilliqa/backend/userlending
+
+# Preview page
+preview:
+    title: Preview User Lending

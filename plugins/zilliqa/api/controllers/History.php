@@ -139,9 +139,24 @@ class History extends General {
     public function storeWithDraw(Request $request) {
         try {
             $this->valiadatedRequest($request);
-            $withDraw = $this->withDrawRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'type']));
+            $withDraw = $this->withDrawRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'type','eth_convert','wallet_address']));
             if ($withDraw) {
                 $user = JWTAuth::parseToken()->authenticate();
+                $userID = $user->id;
+                $member = User::find($userID);
+                $amount = $request->get('amount');
+                $type = $request->get('type');
+                if ($member) {
+                    if ($type == 1) {
+                        $member->zilliqa = $member->zilliqa - $amount;
+                        $member->zilliqa_minimum = $member->zilliqa_minimum - $amount;
+                    } elseif ($type == 2) {                        
+                        $member->daily = $member->daily - $amount;                    
+                    } else {
+                        $member->commission = $member->commission - $amount;                    
+                    }
+                    $member->save();
+                }                
                 $this->sendMailConfirmWithDraw($user, $withDraw);
             }
             return $this->respondWithData($withDraw);
@@ -206,5 +221,56 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
+    
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteDeposit(Request $request) {
+        try {            
+            $transactionID = $request->get('transaction_id');
+            $deposit = $this->depositRepository->find($transactionID);
+            if($deposit){
+                $deposit->delete();
+                return $this->respondWithMessage("Success");
+            }
+        } catch (\Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+    
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteWithDraw(Request $request) {
+        try {            
+            $transactionID = $request->get('transaction_id');
+            $amount = $request->get('amount');
+            $withDraw = $this->withDrawRepository->find($transactionID);
+            if($withDraw){                
+                $userID = $withDraw->user_id;
+                $type = $withDraw->type;
+                $user = User::find($withDraw->user_id);
+                if ($user) {
+                    if ($type == 1) {
+                        $user->zilliqa = $user->zilliqa + $amount;
+                        $user->zilliqa_minimum = $user->zilliqa_minimum + $amount;
+                    } elseif ($type == 2) {
+                        $user->daily = $user->daily + $amount;                    
+                    } else {
+                        $user->commission = $user->commission + $amount;                    
+                    }
+                    $user->save();
+                }      
+                $withDraw->delete();
+                return $this->respondWithMessage("Success");
+            }
+        } catch (\Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+    
+    
 
 }

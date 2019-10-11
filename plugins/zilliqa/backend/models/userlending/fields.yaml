@@ -1,0 +1,20 @@
+fields:
+    lending_id:
+        label: Lending
+        showSearch: true
+        span: auto
+        type: dropdown
+    user_id:
+        label: User
+        showSearch: true
+        span: auto
+        type: dropdown
+    status:
+        label: Status
+        span: auto
+        type: switch
+    created_at:
+        label: 'Created Date'
+        mode: datetime
+        span: auto
+        type: datepicker

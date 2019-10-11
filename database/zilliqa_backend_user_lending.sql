@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-10-03 09:09:48
+Date: 2019-10-10 12:28:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,9 +26,12 @@ CREATE TABLE `zilliqa_backend_user_lending` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `user_id` int(11) NOT NULL,
+  `is_update_bonus` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of zilliqa_backend_user_lending
 -- ----------------------------
+INSERT INTO `zilliqa_backend_user_lending` VALUES ('1', '1', '1', '2019-10-03 14:00:10', null, '1', '1');
+INSERT INTO `zilliqa_backend_user_lending` VALUES ('3', '1', '1', '2019-10-10 09:52:21', '2019-10-10 09:52:21', '5', '0');

@@ -1,0 +1,28 @@
+columns:
+    id:
+        label: id
+        type: number
+    lending_id:
+        label: Lending        
+        select: title
+        relation: lending
+    user_id:
+        label: Fullname        
+        select: name
+        relation: user
+    user_name:
+        label: Username   
+        select: username
+        relation: user  
+    email:
+        label: Email
+        select: email
+        relation: user
+    created_at:
+        label: 'Created Date'
+        type: datetime
+    status:
+        label: Status
+        label: Status
+        type: partial
+        path: ~/plugins/zilliqa/backend/models/userlending/_state_column.htm

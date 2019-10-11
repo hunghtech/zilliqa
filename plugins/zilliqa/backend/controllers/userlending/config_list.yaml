@@ -3,16 +3,16 @@
 # ===================================
 
 # Model List Column configuration
-list: $/zilliqa/backend/models/presenter/columns.yaml
+list: $/zilliqa/backend/models/userlending/columns.yaml
 
 # Model Class name
-modelClass: Zilliqa\Backend\Models\Presenter
+modelClass: Zilliqa\Backend\Models\UserLending
 
 # List Title
-title: Manage Presenters
+title: Manage User Lendings
 
 # Link URL for each record
-recordUrl: zilliqa/backend/presenter/update/:id
+recordUrl: zilliqa/backend/userlending/update/:id
 
 # Message to display if the list is empty
 noRecordsMessage: backend::lang.list.no_records
@@ -36,8 +36,6 @@ showSorting: true
 
 # Display checkboxes next to each record
 showCheckboxes: true
-# showTree: 1
-# treeExpanded: 1 
 
 # Toolbar widget configuration
 toolbar:

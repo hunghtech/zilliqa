@@ -45,7 +45,7 @@ class Lending extends General {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user) {
                 $userId = $user->id;
-                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->get();
+                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->where('is_update_lending',1)->get();
                 return $this->respondWithData($lendingList);
             }
         } catch (Exception $e) {
@@ -76,7 +76,7 @@ class Lending extends General {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user) {
                 $userId = $user->id;
-                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->first();
+                $lendingList = $this->userLendingRepository->where('status', 1)->where('user_id', $userId)->get();
                 return $this->respondWithData($lendingList);
             }
         } catch (Exception $e) {

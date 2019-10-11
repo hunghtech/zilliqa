@@ -32,3 +32,12 @@
 1.0.12:
     - 'Created table zilliqa_backend_history_commission'
     - builder_table_create_zilliqa_backend_history_commission.php
+1.0.13:
+    - 'Updated table zilliqa_backend_lending_package'
+    - builder_table_update_zilliqa_backend_lending_package.php
+1.0.14:
+    - 'Updated table zilliqa_backend_user_lending'
+    - builder_table_update_zilliqa_backend_user_lending.php
+1.0.15:
+    - 'Updated table zilliqa_backend_history_with_draw'
+    - builder_table_update_zilliqa_backend_history_with_draw_2.php

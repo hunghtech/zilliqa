@@ -61,16 +61,18 @@ class HistoryDeposit extends Model {
     }
 
     public function afterSave() {
-        if ($this->status == 2) {
-            //Insert user Lending
-            $arrData = [
-                'user_id' => $this->user_id, 'lending_id' => $this->lending_id, 'status' => 1
-            ];
-            UserLending::create($arrData);
+        if ($this->status == 2) {            
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
             $package = $lending->title;
-            $bonusZil = $lending->bonus_zil;
+            $bonusZil = $lending->bonus_zil;            
+            
+            //Insert user Lending
+            $arrData = [
+                'user_id' => $this->user_id, 'lending_id' => $this->lending_id, 'status' => 1,'is_update_lending' => $lending->is_update_lending
+            ];
+            UserLending::create($arrData);
+            
             //Update Zill for user
             if ($bonusZil > 0) {
                 $user = User::find($this->user_id);

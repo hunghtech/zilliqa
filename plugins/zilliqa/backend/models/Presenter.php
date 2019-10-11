@@ -4,6 +4,7 @@ namespace Zilliqa\Backend\Models;
 
 use Model;
 use RainLab\User\Models\User;
+use October\Rain\Database\Traits\NestedTree;
 
 /**
  * Model
@@ -11,6 +12,7 @@ use RainLab\User\Models\User;
 class Presenter extends Model {
 
     use \October\Rain\Database\Traits\Validation;
+    //use NestedTree;
 
     protected $userRoot = 0;
     protected $userParent = 0;
@@ -46,6 +48,20 @@ class Presenter extends Model {
 
     protected $appends = ['user'];
 
+    public function getUserIdOptions() {
+        $users = User::lists('name', 'id');
+        return $users;
+    }
+    
+    public function getUserPresentOptions() {
+        $users = User::lists('name', 'id');
+        return $users;
+    }
+    public function getParentPresentOptions() {
+        $users = User::lists('name', 'id');
+        return $users;
+    }
+    
     /**
      * @return mixed
      */

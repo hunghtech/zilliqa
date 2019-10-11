@@ -1,0 +1,16 @@
+fields:
+    user_id:
+        label: Investor
+        showSearch: true
+        span: auto
+        type: dropdown
+    user_present:
+        label: Presenter
+        showSearch: true
+        span: auto
+        type: dropdown
+    parent_present:
+        label: 'Parent Present'
+        showSearch: true
+        span: auto
+        type: dropdown

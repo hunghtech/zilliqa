@@ -2,6 +2,7 @@
 
 use Model;
 use Zilliqa\Backend\Models\Lending;
+use RainLab\User\Models\User;
 
 /**
  * Model
@@ -19,13 +20,39 @@ class UserLending extends Model
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['user_id','status', 'lending_id'];
+    protected $fillable = ['user_id','status', 'lending_id','is_update_lending'];
 
     /**
      * @var array Validation rules
      */
     public $rules = [];
+    
+    /**
+     * @var array Relations
+     */
+    public $hasOne = [];
+    public $hasMany = [];
+    public $belongsTo = [
+        'user' => ['RainLab\User\Models\User', 'key' => 'user_id'],
+        'lending' => ['Zilliqa\Backend\Models\Lending', 'key' => 'lending_id']
+    ];
+    public $belongsToMany = [];
+    public $morphTo = [];
+    public $morphOne = [];
+    public $morphMany = [];
+    public $attachOne = [];
+    public $attachMany = [];
 
+    
+    public function getUserIdOptions() {
+        $users = User::lists('name', 'id');
+        return $users;
+    }
+    
+    public function getLendingIdOptions() {
+        $lendings = Lending::lists('title', 'id');
+        return $lendings;
+    }
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

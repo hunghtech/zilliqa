@@ -23,4 +23,11 @@ columns:
         type: datetime
     type:
         label: Type
-        type: number
+        type: partial
+        path: ~/plugins/zilliqa/backend/models/historydeposit/_type_column.htm
+    eth_convert:
+        label: ETH
+        type: number       
+    wallet_address:
+        label: Wallet Address
+        type: number        

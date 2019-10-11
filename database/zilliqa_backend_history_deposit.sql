@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-10-03 09:09:15
+Date: 2019-10-10 12:28:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,8 +30,11 @@ CREATE TABLE `zilliqa_backend_history_deposit` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `lending_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of zilliqa_backend_history_deposit
 -- ----------------------------
+INSERT INTO `zilliqa_backend_history_deposit` VALUES ('1', '1', 'ETH', '55.707', '0', '2019-10-07 10:41:29', '2019-10-07 10:41:29', null, '1');
+INSERT INTO `zilliqa_backend_history_deposit` VALUES ('2', '5', 'ETH', '55.707', '2', '2019-10-10 09:52:21', '2019-10-10 09:52:21', null, '1');
+INSERT INTO `zilliqa_backend_history_deposit` VALUES ('3', '17', 'ETH', '55.707', '0', '2019-10-10 09:23:59', '2019-10-07 10:57:27', null, '1');
