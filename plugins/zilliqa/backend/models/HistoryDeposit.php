@@ -61,18 +61,18 @@ class HistoryDeposit extends Model {
     }
 
     public function afterSave() {
-        if ($this->status == 2) {            
+        if ($this->status == 2) {
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
             $package = $lending->title;
-            $bonusZil = $lending->bonus_zil;            
-            
+            $bonusZil = $lending->bonus_zil;
+
             //Insert user Lending
             $arrData = [
                 'user_id' => $this->user_id, 'lending_id' => $this->lending_id, 'status' => 1,'is_update_lending' => $lending->is_update_lending
             ];
             UserLending::create($arrData);
-            
+
             //Update Zill for user
             if ($bonusZil > 0) {
                 $user = User::find($this->user_id);
@@ -84,7 +84,6 @@ class HistoryDeposit extends Model {
                     $user->save();
                 }
             }
-
             $presenter = new Presenter();
             //Get List Referal
             $list = $presenter->get()->toArray();
@@ -92,33 +91,37 @@ class HistoryDeposit extends Model {
             $presenterList = $presenter->where('user_id', $this->user_id)->first();
 
             $presenterID = $presenterList->user_present;
-            $allowLevel = $presenter->getReferralLevel($presenterID);
+            //Check User Lending
+            $checkUserLending = UserLending::where('user_id',$presenterID)->where('status',1)->first();
+            if($checkUserLending && !empty($checkUserLending)){
+                $allowLevel = $presenter->getReferralLevel($presenterID);
 
-            //Update Commission for User
-            if ($allowLevel < 6) {
-                $referralList = $this->search($result, 'user_root', $presenterID);
-                $referral = $this->search($referralList, 'user_id', $this->user_id);
-                if(count($referral) > 0){
-                    $level = $referral[0]['level'];
-                    if ($level <= $allowLevel) {
-                        $percentCommission = Setting::get('percent_f' . $level);
-                        $commission = ($percentCommission * $package) / 100;
+                //Update Commission for User
+                if ($allowLevel < 6) {
+                    $referralList = $this->search($result, 'user_root', $presenterID);
+                    $referral = $this->search($referralList, 'user_id', $this->user_id);
+                    if(count($referral) > 0){
+                        $level = $referral[0]['level'];
+                        if ($level <= $allowLevel) {
+                            $percentCommission = Setting::get('percent_f' . $level);
+                            $commission = ($percentCommission * $package) / 100;
 
-                        //Update Business Volume
-                        $presenterList->business_volume = $package;
-                        $presenterList->save();
+                            //Update Business Volume
+                            $presenterList->business_volume = $package;
+                            $presenterList->save();
 
-                        //Save History Commission
-                        $arrData = [
-                            'user_id' => $this->user_id, 'commission' => $commission
-                        ];
-                        HistoryCommission::create($arrData);
+                            //Save History Commission
+                            $arrData = [
+                                'user_id' => $this->user_id, 'commission' => $commission
+                            ];
+                            HistoryCommission::create($arrData);
 
-                        //Update Commission for user
-                        $user = User::find($presenterID);
-                        if ($user) {
-                            $user->commission = $user->commission + $commission;
-                            $user->save();
+                            //Update Commission for user
+                            $user = User::find($presenterID);
+                            if ($user) {
+                                $user->commission = $user->commission + $commission;
+                                $user->save();
+                            }
                         }
                     }
                 }

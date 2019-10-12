@@ -26,7 +26,7 @@ class UserLending extends Model
      * @var array Validation rules
      */
     public $rules = [];
-    
+
     /**
      * @var array Relations
      */
@@ -42,17 +42,28 @@ class UserLending extends Model
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
+    protected $appends = ['lendingInfo'];
 
-    
+
     public function getUserIdOptions() {
         $users = User::lists('name', 'id');
         return $users;
     }
-    
+
     public function getLendingIdOptions() {
         $lendings = Lending::lists('title', 'id');
         return $lendings;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLendingInfoAttribute() {
+        $lendings = Lending::where('id', $this->lending_id)->get()->toArray();
+        return $lendings;
+    }
+
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

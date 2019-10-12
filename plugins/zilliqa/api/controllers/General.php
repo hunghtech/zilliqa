@@ -24,7 +24,7 @@ class General extends Controller {
     const HTTP_METHOD_NOT_ALLOWED = Response::HTTP_METHOD_NOT_ALLOWED;
 
     public function __construct() {
-        
+
     }
 
     protected function getStatusCode() {
@@ -183,11 +183,12 @@ class General extends Controller {
         $randomToken = $this->randomString();
         $recordId = $data->id;
         $amount = $data->amount;
+        $wallet_address = $data->wallet_address;
         $logo = url('/') . "/plugins/zilliqa/api/assets/images/logo.png";
         $svg = url('/') . "/plugins/zilliqa/api/assets/images/Zilliqa-bg.svg";
         $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
         $url = $url_app . '/confirm-withdraw?token=' . $token;
-        Mail::send('zilliqa.api::mail.withdraw', ['user' => $user, 'url' => $url, 'amount' => $amount, 'logo' => $logo, 'svg' => $svg], function ($m) use ($user) {
+        Mail::send('zilliqa.api::mail.withdraw', ['user' => $user, 'url' => $url, 'amount' => $amount, 'logo' => $logo, 'wallet_address' => $wallet_address], function ($m) use ($user) {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
 
             $m->to($user->email, $user->name)->subject('[ZILLIQA-NETWORK] Withdrawal Requested');
@@ -210,7 +211,7 @@ class General extends Controller {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
             $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
             $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
-            $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
+            $m->subject('[Zilliqa NetWork] Xác nhận nạp tiền');
         });
         if (Mail::failures()) {
             return 'Mail not sent';
