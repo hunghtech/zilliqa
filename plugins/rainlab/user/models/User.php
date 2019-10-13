@@ -50,7 +50,10 @@ class User extends UserBase
         'username',
         'email',
         'password',
-        'password_confirmation'
+        'password_confirmation',
+        'country_id',
+        'gender',
+        'dob'
     ];
 
     /**
@@ -447,7 +450,7 @@ class User extends UserBase
     {
         $this->password = $this->password_confirmation = Str::random(static::getMinPasswordLength());
     }
-    
+
     public function getCountryIdOptions() {
         $countries = Country::lists('name', 'id');
         return $countries;

@@ -8,3 +8,8 @@ fields:
         label: Commission
         span: auto
         type: text
+    created_at:
+        label: 'Created Date'
+        mode: datetime
+        span: auto
+        type: datepicker

@@ -4,12 +4,13 @@ namespace Zilliqa\Backend\Models;
 
 use Model;
 use RainLab\User\Models\User;
+use Zilliqa\Backend\Models\HistoryCommission;
 use Zilliqa\Backend\Models\Lending;
 use JWTAuth;
+use Zilliqa\Backend\Models\Setting;
 use Zilliqa\Backend\Models\UserLending;
 use Zilliqa\Backend\Models\Presenter;
-use Zilliqa\Backend\Models\Setting;
-use Zilliqa\Backend\Models\HistoryCommission;
+use DB;
 
 /**
  * Model
@@ -51,7 +52,7 @@ class HistoryDeposit extends Model {
     public $attachMany = [];
 
     public function getUserIdOptions() {
-        $users = User::lists('name', 'id');
+        $users = User::lists('username', 'id');
         return $users;
     }
 
@@ -89,43 +90,9 @@ class HistoryDeposit extends Model {
             $list = $presenter->get()->toArray();
             $result = $presenter->showTreePresent($list);
             $presenterList = $presenter->where('user_id', $this->user_id)->first();
-
-            $presenterID = $presenterList->user_present;
-            //Check User Lending
-            $checkUserLending = UserLending::where('user_id',$presenterID)->where('status',1)->first();
-            if($checkUserLending && !empty($checkUserLending)){
-                $allowLevel = $presenter->getReferralLevel($presenterID);
-
-                //Update Commission for User
-                if ($allowLevel < 6) {
-                    $referralList = $this->search($result, 'user_root', $presenterID);
-                    $referral = $this->search($referralList, 'user_id', $this->user_id);
-                    if(count($referral) > 0){
-                        $level = $referral[0]['level'];
-                        if ($level <= $allowLevel) {
-                            $percentCommission = Setting::get('percent_f' . $level);
-                            $commission = ($percentCommission * $package) / 100;
-
-                            //Update Business Volume
-                            $presenterList->business_volume = $package;
-                            $presenterList->save();
-
-                            //Save History Commission
-                            $arrData = [
-                                'user_id' => $this->user_id, 'commission' => $commission
-                            ];
-                            HistoryCommission::create($arrData);
-
-                            //Update Commission for user
-                            $user = User::find($presenterID);
-                            if ($user) {
-                                $user->commission = $user->commission + $commission;
-                                $user->save();
-                            }
-                        }
-                    }
-                }
-            }
+            $presenterID = $presenterList->parent_present;
+            //Update Commission for User
+            $this->updateCommissionForPresenter($result, $presenterID, $package);
         }
     }
 
@@ -156,9 +123,7 @@ class HistoryDeposit extends Model {
 
         $depositModel->orderBy('id', 'desc');
 
-        $result = $depositModel->paginate($perPage)->toArray();
-
-        return $result;
+        return $depositModel->get()->toArray();
     }
 
     protected function search($array, $key, $value) {
@@ -177,4 +142,71 @@ class HistoryDeposit extends Model {
         return $results;
     }
 
+    /**
+     * Cập nhật Commission cho cấp 1
+     * @param Request $request
+     * @return mixed
+     */
+    protected function updateCommissionDirectLevel($data, $presenterID, $package)
+    {
+        $referralList = $this->search($data, 'user_parent', $presenterID);
+        $referral = $this->search($referralList, 'user_id', $this->user_id);
+        if(count($referral) > 0){
+            $percentCommission = Setting::get('percent_f1');
+            $user_present = $referral[0]['user_present'];
+
+            //Status Lending
+            $statusLending = UserLending::where('user_id',$user_present)->where('status',1)->first();
+            if($statusLending){
+                $commission = ($percentCommission * $package) / 100;
+                //Update Business Volume
+                DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->update(['business_volume' => $package]);
+
+                //Save History Commission
+                $arrData = [
+                    'user_id' => $user_present, 'commission' => $commission
+                ];
+                HistoryCommission::create($arrData);
+            }
+        }
+    }
+
+    /**
+     * Đệ quy cho các cấp gián tiếp
+     * @param Request $request
+     * @return mixed
+     */
+    protected function updateCommissionForPresenter($data, $presenterID, $package){
+        $userCurrent = $this->user_id;
+        for($index = 1; $index < 6; $index++)
+        {
+            $referral = $this->search($data, 'user_id', $userCurrent);
+            if(count($referral) > 0){
+                if($userCurrent != $referral[0]['user_present']){
+                    $userCurrent = $referral[0]['user_present'];
+                    //Status Lending
+                    $statusLending = UserLending::where('user_id',$userCurrent)->where('status',1)->first();
+                    if($statusLending){
+                        $allowLevel = Presenter::getReferralLevel($userCurrent);
+                        if($allowLevel >= $index){
+                            $percentCommission = Setting::get('percent_f'.$index);
+                            $commission = ($percentCommission * $package) / 100;
+                            //Update Business Volume
+                            DB::table('zilliqa_backend_presenter')->where('user_id', $userCurrent)->update(['business_volume' => $package]);
+
+                            //Save History Commission
+                            $arrData = [
+                                'user_id' => $userCurrent, 'commission' => $commission
+                            ];
+                            HistoryCommission::create($arrData);
+                        }
+                    }
+                }
+                else
+                    return true;
+            }
+            else
+                return true;
+        }
+    }
 }

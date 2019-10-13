@@ -42,7 +42,7 @@ class HistoryWithDraw extends Model {
     public $attachMany = [];
 
     public function getUserIdOptions() {
-        $users = User::lists('name', 'id');
+        $users = User::lists('username', 'id');
         return $users;
     }
 
@@ -59,27 +59,27 @@ class HistoryWithDraw extends Model {
         $toDate = $request->to_date;
         $type = $request->type;
 
-        $depositModel = $this->where('id', '>', 0);
-        $depositModel->when($userID, function($query, $userID) {
+        $withdrawModel = $this->where('id', '>', 0);
+        $withdrawModel->when($userID, function($query, $userID) {
             return $query->where('user_id', $userID);
         });
 
-        $depositModel->when($type, function($query, $type) {
+        $withdrawModel->when($type, function($query, $type) {
             return $query->where('type', $type);
         });
 
 
-        $depositModel->when($fromDate, function($query, $fromDate) {
+        $withdrawModel->when($fromDate, function($query, $fromDate) {
             return $query->whereDate('created_at', '>=', $fromDate);
         });
 
-        $depositModel->when($toDate, function($query, $toDate) {
+        $withdrawModel->when($toDate, function($query, $toDate) {
             return $query->whereDate('created_at', '<=', $toDate);
         });
 
-        $depositModel->orderBy('id', 'desc');
+        $withdrawModel->orderBy('id', 'desc');
 
-        $result = $depositModel->paginate($perPage)->toArray();
+        $result = $withdrawModel->paginate($perPage)->toArray();
 
         return $result;
     }

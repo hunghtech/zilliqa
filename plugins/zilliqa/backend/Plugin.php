@@ -97,6 +97,23 @@ class Plugin extends PluginBase {
                     'tab' => 'rainlab.user::lang.user.account',
                     'span' => 'auto',
                 ],
+                'gender' => [
+                    'label' => 'Gender',
+                    'type' => 'dropdown',
+                    'options' => [
+                        'Male' => 'Male',
+                        'Female' => 'Female'
+                    ],
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',
+                ]
+                ,
+                'Birthday' => [
+                    'label' => 'Birthday',
+                    'type' => 'text',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',
+                ]
             ]);
 
             $form->addTabFields([

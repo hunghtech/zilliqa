@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Zilliqa\Backend\Models\BonusDaily;
 use RainLab\User\Models\User;
 use Zilliqa\Backend\Models\HistoryDaily;
+use DB;
 
 class UpdateDaily extends Command {
 
@@ -33,10 +34,10 @@ class UpdateDaily extends Command {
                 //Update Daily for User
                 $user = User::find($userID);
                 if($user)
-                {                    
-                    $user->daily = $user->daily + $bonusDaily;
-                    $user->save();
-                    
+                {
+                    $totalDaily = $user->daily + $bonusDaily;
+                    DB::table('users')->where('id',$userID)->update(['daily' => $totalDaily]);
+
                     //Save History Daily
                     $arrData = [
                         'user_id' => $user->id, 'daily' => $bonusDaily

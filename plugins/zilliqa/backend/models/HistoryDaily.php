@@ -10,13 +10,13 @@ use JWTAuth;
 class HistoryDaily extends Model
 {
     use \October\Rain\Database\Traits\Validation;
-    
+
 
     /**
      * @var string The database table used by the model.
      */
     public $table = 'zilliqa_backend_history_daily';
-    
+
     /**
      * @var array Fillable fields
      */
@@ -26,7 +26,7 @@ class HistoryDaily extends Model
      * @var array Validation rules
      */
     public $rules = [];
-    
+
     /**
      * @var array Relations
      */
@@ -41,12 +41,18 @@ class HistoryDaily extends Model
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
-    
+
     public function getUserIdOptions() {
-        $users = User::lists('name', 'id');
+        $users = User::lists('username', 'id');
         return $users;
     }
-    
+
+    public function afterSave(){
+        $user = User::find($this->user_id);
+        $user->daily = $user->daily + $this->daily;
+        $user->save();
+    }
+
     /**
      * @param Request $request
      * @return mixed

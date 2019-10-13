@@ -32,17 +32,9 @@ class History extends General {
      */
     public function historyDeposit(Request $request) {
         try {
-            $depositListPagination = $this->depositRepository->getAllFilter($request);
-            $depositListData = $depositListPagination['data'];
+            $depositListData = $this->depositRepository->getAllFilter($request);
 
-            //Paging object
-            $paginateArr = [];
-            $paginateArr['total_item'] = $depositListPagination['total'];
-            $paginateArr['per_page'] = $depositListPagination['per_page'];
-            $paginateArr['current_page'] = $depositListPagination['current_page'];
-            $paginateArr['total_pages'] = $depositListPagination['last_page'];
-
-            return $this->respondWithDataPaging($depositListData, $paginateArr);
+            return $this->respondWithData($depositListData);
         } catch (\Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
@@ -69,8 +61,8 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
-     /**
+
+    /**
      * @param  $request
      * @return \Illuminate\Http\Response
      */
@@ -91,7 +83,7 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     /**
      * @param  $request
      * @return \Illuminate\Http\Response
@@ -150,13 +142,13 @@ class History extends General {
                     if ($type == 1) {
                         $member->zilliqa = $member->zilliqa - $amount;
                         $member->zilliqa_minimum = $member->zilliqa_minimum - $amount;
-                    } elseif ($type == 2) {                        
-                        $member->daily = $member->daily - $amount;                    
+                    } elseif ($type == 2) {
+                        $member->daily = $member->daily - $amount;
                     } else {
-                        $member->commission = $member->commission - $amount;                    
+                        $member->commission = $member->commission - $amount;
                     }
                     $member->save();
-                }                
+                }
                 $this->sendMailConfirmWithDraw($user, $withDraw);
             }
             return $this->respondWithData($withDraw);
@@ -171,21 +163,21 @@ class History extends General {
      */
     protected function valiadatedRequest($request) {
         $validator = Validator::make($request->all(), [
-                    'user_id' => 'required',
-                    'coint' => 'required',
-                    'amount' => 'required'
+            'user_id' => 'required',
+            'coint' => 'required',
+            'amount' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->respondWithError($validator->errors(), 500);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return mixed
      */
     public function updateDeposit(Request $request) {
-        try {            
+        try {
             $historyId = $request->get('history_id');
             $deposit = $this->depositRepository->find($historyId);
             if($deposit){
@@ -200,13 +192,13 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return mixed
      */
     public function updateWithDraw(Request $request) {
-        try {            
+        try {
             $historyId = $request->get('history_id');
             $withDraw = $this->withDrawRepository->find($historyId);
             if($withDraw){
@@ -221,13 +213,13 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return mixed
      */
     public function deleteDeposit(Request $request) {
-        try {            
+        try {
             $transactionID = $request->get('transaction_id');
             $deposit = $this->depositRepository->find($transactionID);
             if($deposit){
@@ -238,17 +230,17 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     /**
      * @param Request $request
      * @return mixed
      */
     public function deleteWithDraw(Request $request) {
-        try {            
+        try {
             $transactionID = $request->get('transaction_id');
             $amount = $request->get('amount');
             $withDraw = $this->withDrawRepository->find($transactionID);
-            if($withDraw){                
+            if($withDraw){
                 $userID = $withDraw->user_id;
                 $type = $withDraw->type;
                 $user = User::find($withDraw->user_id);
@@ -257,12 +249,12 @@ class History extends General {
                         $user->zilliqa = $user->zilliqa + $amount;
                         $user->zilliqa_minimum = $user->zilliqa_minimum + $amount;
                     } elseif ($type == 2) {
-                        $user->daily = $user->daily + $amount;                    
+                        $user->daily = $user->daily + $amount;
                     } else {
-                        $user->commission = $user->commission + $amount;                    
+                        $user->commission = $user->commission + $amount;
                     }
                     $user->save();
-                }      
+                }
                 $withDraw->delete();
                 return $this->respondWithMessage("Success");
             }
@@ -270,7 +262,7 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-    
-    
+
+
 
 }

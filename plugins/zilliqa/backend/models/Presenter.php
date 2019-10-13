@@ -52,7 +52,7 @@ class Presenter extends Model {
         $users = User::lists('name', 'id');
         return $users;
     }
-    
+
     public function getUserPresentOptions() {
         $users = User::lists('name', 'id');
         return $users;
@@ -61,7 +61,7 @@ class Presenter extends Model {
         $users = User::lists('name', 'id');
         return $users;
     }
-    
+
     /**
      * @return mixed
      */
@@ -78,7 +78,7 @@ class Presenter extends Model {
         return $users;
     }
 
-    public function getReferralLevel($user_id) {
+    public static function getReferralLevel($user_id) {
         return self::where('user_present', $user_id)->count();
     }
 

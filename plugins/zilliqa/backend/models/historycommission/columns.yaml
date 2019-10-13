@@ -1,6 +1,10 @@
 columns:
     user_id:
-        label: User        
+        label: Username
+        select: username
+        relation: user
+    full_name:
+        label: Fullname
         select: name
         relation: user
     commission:

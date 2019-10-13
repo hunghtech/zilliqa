@@ -166,11 +166,11 @@ class User extends General {
             } else {
                 if (!(Hash::check($data['current_password'], $password))) {
                     // The passwords matches
-                    return $this->respondWithError('The current password is incorrect', self::HTTP_METHOD_NOT_ALLOWED);
+                    return $this->respondWithError('The current password is incorrect', self::HTTP_NOT_FOUND);
                 }
                 if (strcmp($data['current_password'], $data['new_password']) == 0) {
                     //Current password and new password are same
-                    return $this->respondWithError('The current password is incorrect', self::HTTP_METHOD_NOT_ALLOWED);
+                    return $this->respondWithError('The current password is incorrect', self::HTTP_NOT_FOUND);
                 }
                 //Change Password
                 $newPassword = $request->get('new_password');
@@ -233,7 +233,7 @@ class User extends General {
                     $message = $this->sendMailForGot($user, $reset_password_token);
                     return $this->respondWithMessage($message);
                 } else {
-                    return $this->respondWithError('Tài khoản không tồn tại.<br> Xin vui lòng thử lại.', self::HTTP_NOT_FOUND);
+                    return $this->respondWithError('Account does not exist. Please try again!', self::HTTP_NOT_FOUND);
                 }
             }
         } catch (\Exception $ex) {
@@ -336,8 +336,8 @@ class User extends General {
                 $userID = $user->id;
                 $list = $this->presenterRepository->get()->toArray();
                 $result = $this->presenterRepository->showTreePresent($list);
-                $returnData = $this->search($result, 'user_root', $userID);
-                $returnData = $this->search($result, 'level', 1);
+                $returnData = $this->search($result, 'user_present', $userID,"equal");
+                $returnData = $this->search($returnData, 'user_parent', 0,'not equal');
                 return $this->respondWithData($returnData);
             }
         } catch (Exception $e) {
@@ -354,10 +354,10 @@ class User extends General {
             $user_root = $request->get('user_parent');
             $list = $this->presenterRepository->get()->toArray();
             $result = $this->presenterRepository->showTreePresent($list);
-            $downlineMember = $this->search($result, 'user_parent', $user_root);
+            $downlineMember = $this->search($result, 'user_parent', $user_root,"equal");
             //$ids = [];
 
-            //Foreach downline number
+            //Foreach downline numbergetListReferal
 //            if($downlineMember){
 //                foreach($downlineMember as $member){
 //                    array_push($ids, $member['user_id']);
@@ -402,16 +402,21 @@ class User extends General {
         }
     }
 
-    protected function search($array, $key, $value) {
+    protected function search($array, $key, $value, $condition) {
         $results = array();
-
         if (is_array($array)) {
-            if (isset($array[$key]) && $array[$key] == $value) {
-                $results[] = $array;
+            if($condition == "equal"){
+                if (isset($array[$key]) && $array[$key] == $value) {
+                    $results[] = $array;
+                }
+            }else{
+                if (isset($array[$key]) && $array[$key] != $value) {
+                    $results[] = $array;
+                }
             }
 
             foreach ($array as $subarray) {
-                $results = array_merge($results, $this->search($subarray, $key, $value));
+                $results = array_merge($results, $this->search($subarray, $key, $value, $condition));
             }
         }
 

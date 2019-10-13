@@ -33,7 +33,7 @@ class UpdateZil extends Command {
                 $lendingID = $item->lending_id;
                 $createdDate = date_create($item->created_at);
                 $dateDiff = date_diff($createdDate, $now);
-                $date = $dateDiff->format("%a");                
+                $date = $dateDiff->format("%a");
                 if($date >= 200){
                     //Get Lending
                     $lending = Lending::where('id', $lendingID)->first();
@@ -43,17 +43,17 @@ class UpdateZil extends Command {
                     }
 
                     //Update Daily for User
-                    $user = User::find($userID); 
+                    $user = User::find($userID);
                     if($user)
                     {
-                        $user->zilliqa_minimum = $user->zilliqa_minimum + $bonusZil;
-                        $user->save();
+                        $totalZilliqa = $user->zilliqa_minimum + $bonusZil;
+                        DB::table('users')->where('id',$userID)->update(['zilliqa_minimum' => $totalZilliqa]);
                         DB::table('zilliqa_backend_user_lending')
                             ->where('id', $item->id)
                             ->update(['is_update_bonus' => 1]);
                     }
-                                         
-                }                
+
+                }
             }
         }
     }

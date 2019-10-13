@@ -3,11 +3,15 @@ columns:
         label: id
         type: number
     user_id:
-        label: User        
+        label: Username
+        select: username
+        relation: user
+    full_name:
+        label: Fullname
         select: name
         relation: user
     lending_id:
-        label: Lending        
+        label: Lending
         select: title
         relation: lending
     coint:

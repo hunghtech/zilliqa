@@ -140,11 +140,12 @@ class General extends Controller {
 
             $m->to($user->email, $user->name)->subject('[ZILLIQA-NETWORK] Reset your password');
         });
-        if (Mail::failures()) {
+        /*if (Mail::failures()) {
             return 'Mail not sent';
         } else {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -166,11 +167,12 @@ class General extends Controller {
 
             $m->to($user->email, $user->name)->subject('[ZILLIQA-NETWORK] Deposit Confirmation');
         });
-        if (Mail::failures()) {
+        /*if (Mail::failures()) {
             return 'Mail not sent';
         } else {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -188,16 +190,25 @@ class General extends Controller {
         $svg = url('/') . "/plugins/zilliqa/api/assets/images/Zilliqa-bg.svg";
         $token = base64_encode($userID . "-" . $recordId . "-" . $randomToken);
         $url = $url_app . '/confirm-withdraw?token=' . $token;
+        $type = $data->type;
+        $eth_convert = $data->eth_convert;
+        if($type == 1){
+            $amount = $amount . " ZIL";
+        }
+        else{
+            $amount = $amount ." USD " . "(".$eth_convert." ETH)";
+        }
         Mail::send('zilliqa.api::mail.withdraw', ['user' => $user, 'url' => $url, 'amount' => $amount, 'logo' => $logo, 'wallet_address' => $wallet_address], function ($m) use ($user) {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
 
             $m->to($user->email, $user->name)->subject('[ZILLIQA-NETWORK] Withdrawal Requested');
         });
-        if (Mail::failures()) {
+        /*if (Mail::failures()) {
             return 'Mail not sent';
         } else {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -209,15 +220,15 @@ class General extends Controller {
         $svg = url('/') . "/plugins/zilliqa/api/assets/images/Zilliqa-bg.svg";
         Mail::send('zilliqa.api::mail.activedeposit', ['user' => $user,'logo' => $logo, 'svg' => $svg, 'data' =>$data], function ($m) use ($user) {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
-            $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
             $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận nạp tiền');
         });
-        if (Mail::failures()) {
+        /*if (Mail::failures()) {
             return 'Mail not sent';
         } else {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -229,15 +240,15 @@ class General extends Controller {
         $svg = url('/') . "/plugins/zilliqa/api/assets/images/Zilliqa-bg.svg";
         Mail::send('zilliqa.api::mail.activewithdraw', ['user' => $user,'logo' => $logo, 'svg' => $svg, 'data' => $data], function ($m) use ($user) {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
-            $m->to('hungdn0502@gmail.com', "Đỗ Như Hưng");
             $m->to('le.quang.thuan286@gmail.com', "Lê Quang Thuận");
             $m->subject('[Zilliqa NetWork] Xác nhận rút tiền');
         });
-        if (Mail::failures()) {
+        /*if (Mail::failures()) {
             return 'Mail not sent';
         } else {
             return 'Hệ thống đã gửi một liên kết để cài đặt lại mật khẩu. <br>Xin vui lòng kiểm tra hộp thư của bạn.';
-        }
+        }*/
+        return true;
     }
 
 }

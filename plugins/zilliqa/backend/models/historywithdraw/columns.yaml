@@ -3,7 +3,13 @@ columns:
         label: id
         type: number
     user_id:
-        label: User
+        label: Username
+        searchable: true
+        sortable: true
+        select: username
+        relation: user
+    full_name:
+        label: Fullname
         searchable: true
         sortable: true
         select: name
@@ -27,7 +33,7 @@ columns:
         path: ~/plugins/zilliqa/backend/models/historydeposit/_type_column.htm
     eth_convert:
         label: ETH
-        type: number       
+        type: number
     wallet_address:
         label: Wallet Address
-        type: number        
+        type: number
