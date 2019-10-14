@@ -61,7 +61,7 @@ class HistoryDeposit extends Model {
         return $lendings;
     }
 
-    /*public function afterSave() {
+    public function afterSave() {
         if ($this->status == 2) {
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
@@ -94,7 +94,7 @@ class HistoryDeposit extends Model {
             //Update Commission for User
             $this->updateCommissionForPresenter($result, $presenterID, $package);
         }
-    }*/
+    }
 
     /**
      * @param Request $request
@@ -106,14 +106,9 @@ class HistoryDeposit extends Model {
         $user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
 
-        $depositModel = $this->whereNull('deleted_at');
-        $depositModel->when($userID, function($query, $userID) {
-            return $query->where('user_id', $userID);
-        });
-
-        $depositModel->orderBy('id', 'desc');
-
-        return $depositModel->get()->toArray();
+        return $this->whereNull('deleted_at')
+				->where('user_id', $userID)				
+				->get();
     }
 
     protected function search($array, $key, $value) {

@@ -50,38 +50,15 @@ class HistoryWithDraw extends Model {
      * @param Request $request
      * @return mixed
      */
-    public function getAllFilter($request) {
-        $perPage = $request->get('limit', 10);
-
-        $user = JWTAuth::parseToken()->authenticate();
+    public function getAllFilter() {
+		
+		$user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
-        $fromDate = $request->from_date;
-        $toDate = $request->to_date;
-        $type = $request->type;
 
-        $withdrawModel = $this->where('id', '>', 0);
-        $withdrawModel->when($userID, function($query, $userID) {
-            return $query->where('user_id', $userID);
-        });
+        return $this->whereNull('deleted_at')
+				->where('user_id', $userID)				
+				->get();
 
-        $withdrawModel->when($type, function($query, $type) {
-            return $query->where('type', $type);
-        });
-
-
-        $withdrawModel->when($fromDate, function($query, $fromDate) {
-            return $query->whereDate('created_at', '>=', $fromDate);
-        });
-
-        $withdrawModel->when($toDate, function($query, $toDate) {
-            return $query->whereDate('created_at', '<=', $toDate);
-        });
-
-        $withdrawModel->orderBy('id', 'desc');
-
-        $result = $withdrawModel->paginate($perPage)->toArray();
-
-        return $result;
     }
 
 }

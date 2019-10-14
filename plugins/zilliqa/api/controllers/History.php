@@ -31,10 +31,8 @@ class History extends General {
      * @return \Illuminate\Http\Response
      */
     public function historyDeposit() {
-        try {
-			$user = JWTAuth::parseToken()->authenticate();
-			$userID = $user->id;
-            $depositListData = $this->depositRepository->where('user_id',$userID)->get();
+        try {			
+            $depositListData = $this->depositRepository->getAllFilter();
 
             return $this->respondWithData($depositListData);
         } catch (\Exception $e) {
@@ -46,19 +44,19 @@ class History extends General {
      * @param  $request
      * @return \Illuminate\Http\Response
      */
-    public function historyWithDraw(Request $request) {
+    public function historyWithDraw() {
         try {
-            $withDrawListPagination = $this->withDrawRepository->getAllFilter($request);
-            $withDrawListData = $withDrawListPagination['data'];
+            $withDrawListData = $this->withDrawRepository->getAllFilter();
+            /*$withDrawListData = $withDrawListPagination['data'];
 
             //Paging object
             $paginateArr = [];
             $paginateArr['total_item'] = $withDrawListPagination['total'];
             $paginateArr['per_page'] = $withDrawListPagination['per_page'];
             $paginateArr['current_page'] = $withDrawListPagination['current_page'];
-            $paginateArr['total_pages'] = $withDrawListPagination['last_page'];
+            $paginateArr['total_pages'] = $withDrawListPagination['last_page'];*/
 
-            return $this->respondWithDataPaging($withDrawListData, $paginateArr);
+            return $this->respondWithData($withDrawListData);
         } catch (\Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
