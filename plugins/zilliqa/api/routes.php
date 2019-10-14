@@ -34,7 +34,7 @@ Route::group([
     });
 
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('history')->group(function () {
-        Route::post('/deposit', 'Zilliqa\Api\Controllers\History@historyDeposit')->name('historyDeposit.list');
+        Route::get('/deposit', 'Zilliqa\Api\Controllers\History@historyDeposit')->name('historyDeposit.list');
         Route::post('/with-draw', 'Zilliqa\Api\Controllers\History@historyWithDraw')->name('historyWithDraw.list');
         Route::post('/daily', 'Zilliqa\Api\Controllers\History@historyDaily')->name('historyDaily.list');
         Route::post('/commission', 'Zilliqa\Api\Controllers\History@historyCommission')->name('historyCommission.list');

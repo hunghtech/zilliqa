@@ -35,8 +35,8 @@ class UpdateDaily extends Command {
                 $user = User::find($userID);
                 if($user)
                 {
-                    $totalDaily = $user->daily + $bonusDaily;
-                    DB::table('users')->where('id',$userID)->update(['daily' => $totalDaily]);
+                    /*$totalDaily = $user->daily + $bonusDaily;
+                    DB::table('users')->where('id',$userID)->update(['daily' => $totalDaily]);*/
 
                     //Save History Daily
                     $arrData = [

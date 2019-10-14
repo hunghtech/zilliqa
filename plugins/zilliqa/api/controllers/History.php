@@ -30,9 +30,11 @@ class History extends General {
      * @param  $request
      * @return \Illuminate\Http\Response
      */
-    public function historyDeposit(Request $request) {
+    public function historyDeposit() {
         try {
-            $depositListData = $this->depositRepository->getAllFilter($request);
+			$user = JWTAuth::parseToken()->authenticate();
+			$userID = $user->id;
+            $depositListData = $this->depositRepository->where('user_id',$userID)->get();
 
             return $this->respondWithData($depositListData);
         } catch (\Exception $e) {

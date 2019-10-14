@@ -106,9 +106,8 @@ class Plugin extends PluginBase {
                     ],
                     'tab' => 'rainlab.user::lang.user.account',
                     'span' => 'auto',
-                ]
-                ,
-                'Birthday' => [
+                ],
+                'dob' => [
                     'label' => 'Birthday',
                     'type' => 'text',
                     'tab' => 'rainlab.user::lang.user.account',
