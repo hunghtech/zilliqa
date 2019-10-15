@@ -51,12 +51,6 @@ class Presenter extends Model {
     public $attachOne = [];
     public $attachMany = [];
     protected $appends = ['userInfo'];
-
-    public function __construct()
-    {
-        parent::__construct();
-
-    }
     
     public function getUserIdOptions() {
         $users = User::lists('name', 'id');
