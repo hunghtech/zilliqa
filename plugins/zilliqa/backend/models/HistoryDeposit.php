@@ -90,9 +90,11 @@ class HistoryDeposit extends Model {
             $list = $presenter->get()->toArray();
             $result = $presenter->showTreePresent($list);
             $presenterList = $presenter->where('user_id', $this->user_id)->first();
-            $presenterID = $presenterList->parent_id;
-            //Update Commission for User
-            $this->updateCommissionForPresenter($result, $presenterID, $package);
+			if($presenterList){
+				$presenterID = $presenterList->parent_id;
+				//Update Commission for User
+				$this->updateCommissionForPresenter($result, $presenterID, $package);
+			}            
         }
     }
 
