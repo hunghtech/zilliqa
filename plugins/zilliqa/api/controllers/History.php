@@ -31,8 +31,9 @@ class History extends General {
      * @return \Illuminate\Http\Response
      */
     public function historyDeposit() {
-        try {			
-            $depositListData = $this->depositRepository->getAllFilter();
+        try {
+            $depositListDataPaging = $this->depositRepository->getAllFilter();
+            $depositListData = $depositListDataPaging['data'];
 
             return $this->respondWithData($depositListData);
         } catch (\Exception $e) {
@@ -46,15 +47,15 @@ class History extends General {
      */
     public function historyWithDraw() {
         try {
-            $withDrawListData = $this->withDrawRepository->getAllFilter();
-            /*$withDrawListData = $withDrawListPagination['data'];
+            $withDrawListPagination = $this->withDrawRepository->getAllFilter();
+            $withDrawListData = $withDrawListPagination['data'];
 
             //Paging object
-            $paginateArr = [];
-            $paginateArr['total_item'] = $withDrawListPagination['total'];
-            $paginateArr['per_page'] = $withDrawListPagination['per_page'];
-            $paginateArr['current_page'] = $withDrawListPagination['current_page'];
-            $paginateArr['total_pages'] = $withDrawListPagination['last_page'];*/
+            /* $paginateArr = [];
+              $paginateArr['total_item'] = $withDrawListPagination['total'];
+              $paginateArr['per_page'] = $withDrawListPagination['per_page'];
+              $paginateArr['current_page'] = $withDrawListPagination['current_page'];
+              $paginateArr['total_pages'] = $withDrawListPagination['last_page']; */
 
             return $this->respondWithData($withDrawListData);
         } catch (\Exception $e) {
@@ -131,7 +132,7 @@ class History extends General {
     public function storeWithDraw(Request $request) {
         try {
             $this->valiadatedRequest($request);
-            $withDraw = $this->withDrawRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'type','eth_convert','wallet_address']));
+            $withDraw = $this->withDrawRepository->create($request->all(['user_id', 'coint', 'amount', 'status', 'type', 'eth_convert', 'wallet_address']));
             if ($withDraw) {
                 $user = JWTAuth::parseToken()->authenticate();
                 $userID = $user->id;
@@ -163,9 +164,9 @@ class History extends General {
      */
     protected function valiadatedRequest($request) {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'coint' => 'required',
-            'amount' => 'required'
+                    'user_id' => 'required',
+                    'coint' => 'required',
+                    'amount' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->respondWithError($validator->errors(), 500);
@@ -180,7 +181,7 @@ class History extends General {
         try {
             $historyId = $request->get('history_id');
             $deposit = $this->depositRepository->find($historyId);
-            if($deposit){
+            if ($deposit) {
                 $deposit->status = 1;
                 $deposit->save();
                 $userID = $deposit->user_id;
@@ -201,7 +202,7 @@ class History extends General {
         try {
             $historyId = $request->get('history_id');
             $withDraw = $this->withDrawRepository->find($historyId);
-            if($withDraw){
+            if ($withDraw) {
                 $withDraw->status = 1;
                 $withDraw->save();
                 $userID = $withDraw->user_id;
@@ -222,7 +223,7 @@ class History extends General {
         try {
             $transactionID = $request->get('transaction_id');
             $deposit = $this->depositRepository->find($transactionID);
-            if($deposit){
+            if ($deposit) {
                 $deposit->delete();
                 return $this->respondWithMessage("Success");
             }
@@ -240,7 +241,7 @@ class History extends General {
             $transactionID = $request->get('transaction_id');
             $amount = $request->get('amount');
             $withDraw = $this->withDrawRepository->find($transactionID);
-            if($withDraw){
+            if ($withDraw) {
                 $userID = $withDraw->user_id;
                 $type = $withDraw->type;
                 $user = User::find($withDraw->user_id);
@@ -262,7 +263,5 @@ class History extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
-
-
 
 }

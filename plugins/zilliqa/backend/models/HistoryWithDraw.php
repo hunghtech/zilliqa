@@ -21,7 +21,7 @@ class HistoryWithDraw extends Model {
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['user_id', 'coint', 'amount', 'status', 'type','eth_convert','wallet_address'];
+    protected $fillable = ['user_id', 'coint', 'amount', 'status', 'type', 'eth_convert', 'wallet_address'];
 
     /**
      * @var array Validation rules
@@ -51,14 +51,23 @@ class HistoryWithDraw extends Model {
      * @return mixed
      */
     public function getAllFilter() {
-		
-		$user = JWTAuth::parseToken()->authenticate();
+
+        //$perPage = $request->get('limit', 100);
+        $perPage = 100;
+
+        $user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
 
-        return $this->whereNull('deleted_at')
-				->where('user_id', $userID)				
-				->get();
+        $withdrawModel = $this->where('id', '>', 0);
+        $withdrawModel->when($userID, function($query, $userID) {
+            return $query->where('user_id', $userID);
+        });
 
+        $withdrawModel->orderBy('id', 'desc');
+
+        $result = $withdrawModel->paginate($perPage)->toArray();
+
+        return $result;
     }
 
 }

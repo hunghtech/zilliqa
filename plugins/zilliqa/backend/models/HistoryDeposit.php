@@ -103,12 +103,22 @@ class HistoryDeposit extends Model {
     public function getAllFilter() {		
 
         //Initialize param for product filter
+        //$perPage = $request->get('limit', 100);
+		$perPage = 100;
+
         $user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
 
-        return $this->whereNull('deleted_at')
-				->where('user_id', $userID)				
-				->get();
+        $depositModel = $this->whereNull('deleted_at');
+        $depositModel->when($userID, function($query, $userID) {
+            return $query->where('user_id', $userID);
+        });
+
+        $depositModel->orderBy('id', 'desc');
+
+        $result = $depositModel->paginate($perPage)->toArray();
+
+        return $result;
     }
 
     protected function search($array, $key, $value) {
@@ -125,35 +135,6 @@ class HistoryDeposit extends Model {
         }
 
         return $results;
-    }
-
-    /**
-     * Cập nhật Commission cho cấp 1
-     * @param Request $request
-     * @return mixed
-     */
-    protected function updateCommissionDirectLevel($data, $presenterID, $package)
-    {
-        $referralList = $this->search($data, 'user_parent', $presenterID);
-        $referral = $this->search($referralList, 'user_id', $this->user_id);
-        if(count($referral) > 0){
-            $percentCommission = Setting::get('percent_f1');
-            $user_present = $referral[0]['user_present'];
-
-            //Status Lending
-            $statusLending = UserLending::where('user_id',$user_present)->where('status',1)->first();
-            if($statusLending){
-                $commission = ($percentCommission * $package) / 100;
-                //Update Business Volume
-                DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->update(['business_volume' => $package]);
-
-                //Save History Commission
-                $arrData = [
-                    'user_id' => $user_present, 'commission' => $commission
-                ];
-                HistoryCommission::create($arrData);
-            }
-        }
     }
 
     /**
