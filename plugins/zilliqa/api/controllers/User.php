@@ -134,7 +134,7 @@ class User extends General {
                     $parentPresent = $data->id;
                 }
                 $arrPresenter = [
-                    'user_id' => $userID, 'user_present' => $presenterID, 'parent_present' => $parentPresent
+                    'user_id' => $userID, 'user_present' => $presenterID, 'parent_id' => $parentPresent
                 ];
                 $this->presenterRepository->create($arrPresenter);
 

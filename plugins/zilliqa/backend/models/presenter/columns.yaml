@@ -3,8 +3,23 @@ columns:
         label: id
         type: number
     user_id:
-        label: user_id
-        type: number
+        label: Username
+        searchable: true
+        sortable: true
+        select: username
+        relation: user  
+    fullname:
+        label: Fullname
+        searchable: true
+        sortable: true
+        select: name
+        relation: user
+    email:
+        label: Email
+        searchable: true
+        sortable: true
+        select: email
+        relation: user        
     created_at:
         label: created_at
         type: datetime

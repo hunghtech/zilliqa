@@ -4,15 +4,15 @@ namespace Zilliqa\Backend\Models;
 
 use Model;
 use RainLab\User\Models\User;
-use October\Rain\Database\Traits\NestedTree;
+use DB;
 
 /**
  * Model
  */
 class Presenter extends Model {
 
+    use \October\Rain\Database\Traits\SimpleTree;
     use \October\Rain\Database\Traits\Validation;
-    //use NestedTree;
 
     protected $userRoot = 0;
     protected $userParent = 0;
@@ -25,7 +25,7 @@ class Presenter extends Model {
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['user_id', 'user_present','parent_present'];
+    protected $fillable = ['user_id', 'user_present', 'parent_id'];
     protected $hidden = ['updated_at'];
 
     /**
@@ -37,35 +37,51 @@ class Presenter extends Model {
      * @var array Relations
      */
     public $hasOne = [];
-    public $hasMany = [];
-    public $belongsTo = [];
+    public $hasMany = [
+        'children' => ['Zilliqa\Backend\Models\Presenter', 'key' => 'parent_id']
+    ];
+    public $belongsTo = [
+        'parent' => ['Zilliqa\Backend\Models\Presenter', 'key' => 'parent_id'],
+        'user' => ['RainLab\User\Models\User', 'key' => 'user_id'],
+    ];
     public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
+    protected $appends = ['userInfo'];
 
-    protected $appends = ['user'];
+    public function __construct()
+    {
+        parent::__construct();
 
+    }
+    
     public function getUserIdOptions() {
         $users = User::lists('name', 'id');
         return $users;
     }
 
-    public function getUserPresentOptions() {
+    
+    public function getUserPresentOptions(){
         $users = User::lists('name', 'id');
         return $users;
     }
-    public function getParentPresentOptions() {
-        $users = User::lists('name', 'id');
-        return $users;
+    public function getParentIdOptions() {
+        $array_parent = array('0' => '------  Please Select Parent  --------');
+        $parent = self::leftJoin('users','users.id','=','zilliqa_backend_presenter.user_id')
+        ->select(DB::raw("CONCAT(zilliqa_backend_presenter.id,'-',users.username) AS full"),
+              'zilliqa_backend_presenter.id'
+        )->lists('full','id');        
+        $result = $array_parent + $parent;
+        return $result;
     }
 
     /**
      * @return mixed
      */
-    public function getUserAttribute() {
+    public function getUserInfoAttribute() {
         $users = User::where('id', $this->user_id)->get()->toArray();
         return $users;
     }
@@ -83,21 +99,21 @@ class Presenter extends Model {
     }
 
     public function getDownlineMember($user_id) {
-        return $this->where('user_id', $user_id)->orWhere('parent_present', $user_id)->get();
+        return $this->where('user_id', $user_id)->orWhere('parent_id', $user_id)->get();
     }
 
     function showTreePresent($data, $parent_id = 0, $level = 0) {
         $result = [];
         foreach ($data as $item) {
-            if ($item['parent_present'] == $parent_id) {
+            if ($item['parent_id'] == $parent_id) {
                 $item['level'] = $level;
                 if ($level == 1) {
-                    $this->userRoot = $item['parent_present'];
-                    $this->userParent = $item['parent_present'];
+                    $this->userRoot = $item['parent_id'];
+                    $this->userParent = $item['parent_id'];
                 }
                 if ($level == 2) {
                     $this->userRoot = $this->userRoot;
-                    $this->userParent = $item['parent_present'];
+                    $this->userParent = $item['parent_id'];
                 } else {
                     if ($this->userRoot > 0)
                         $this->userRoot = $this->userRoot;

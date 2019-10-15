@@ -9,8 +9,7 @@ fields:
         showSearch: true
         span: auto
         type: dropdown
-    parent_present:
+    parent_id:
         label: 'Parent Present'
-        showSearch: true
         span: auto
         type: dropdown

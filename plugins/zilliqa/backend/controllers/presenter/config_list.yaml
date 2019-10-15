@@ -36,8 +36,7 @@ showSorting: true
 
 # Display checkboxes next to each record
 showCheckboxes: true
-# showTree: 1
-# treeExpanded: 1 
+showTree: true
 
 # Toolbar widget configuration
 toolbar:
