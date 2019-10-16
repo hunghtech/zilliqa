@@ -16,6 +16,8 @@ class Presenter extends Model {
 
     protected $userRoot = 0;
     protected $userParent = 0;
+    protected $totalMember = 0;
+    protected $totalLending = 0;
 
     /**
      * @var string The database table used by the model.
@@ -50,24 +52,24 @@ class Presenter extends Model {
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
+
     protected $appends = ['userInfo'];
-    
+
     public function getUserIdOptions() {
         $users = User::lists('name', 'id');
         return $users;
     }
 
-    
-    public function getUserPresentOptions(){
+    public function getUserPresentOptions() {
         $users = User::lists('name', 'id');
         return $users;
     }
+
     public function getParentIdOptions() {
         $array_parent = array('0' => '------  Please Select Parent  --------');
-        $parent = self::leftJoin('users','users.id','=','zilliqa_backend_presenter.user_id')
-        ->select(DB::raw("CONCAT(zilliqa_backend_presenter.id,'-',users.username) AS full"),
-              'zilliqa_backend_presenter.id'
-        )->lists('full','id');        
+        $parent = self::leftJoin('users', 'users.id', '=', 'zilliqa_backend_presenter.user_id')
+                        ->select(DB::raw("CONCAT(zilliqa_backend_presenter.id,'-',users.username) AS full"), 'zilliqa_backend_presenter.id'
+                        )->lists('full', 'id');
         $result = $array_parent + $parent;
         return $result;
     }
@@ -121,6 +123,57 @@ class Presenter extends Model {
             }
         }
         return $result;
+    }
+
+    public function getListReferal($userID) {
+        $data = $this->all()->toNested()->toArray();
+        $returnData = $this->search($data, 'user_present', $userID, "equal");
+        
+        foreach ($returnData as $index => $item) {
+            $childrens = $item['children'];
+            if ($childrens) {
+                $this->getTreeChildren($childrens);
+            }
+            $returnData[$index]['totalMember'] = $this->totalMember;
+            $returnData[$index]['totalLending'] = $this->totalLending + $item['business_volume'];
+            $this->totalMember = 0;
+            $this->totalLending = 0;
+            unset($returnData[$index]['children']);
+        }
+        return $returnData;
+    }
+
+    protected function getTreeChildren($childrens) {
+        if ($childrens) {
+            foreach ($childrens as $children) {
+                $this->totalMember++;
+                $this->totalLending += $children['business_volume'];               
+                $list = $children['children'];
+                $this->getTreeChildren($list);                
+            }
+        }
+        return true;
+    }
+    
+    protected function search($array, $key, $value, $condition) {
+        $results = array();
+        if (is_array($array)) {
+            if ($condition == "equal") {
+                if (isset($array[$key]) && $array[$key] == $value) {
+                    $results[] = $array;
+                }
+            } else {
+                if (isset($array[$key]) && $array[$key] != $value) {
+                    $results[] = $array;
+                }
+            }
+
+            foreach ($array as $subarray) {
+                $results = array_merge($results, $this->search($subarray, $key, $value, $condition));
+            }
+        }
+
+        return $results;
     }
 
 }

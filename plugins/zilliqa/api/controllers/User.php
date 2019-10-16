@@ -28,9 +28,7 @@ class User extends General {
             $userLendingRepository,
             $userExtendRepository;
 
-    public function __construct(UserModel $user, UserGroup $userGroup,
-                                Presenter $presenter, UserLending $userLending,
-                                UserExtendRepository $userExtend, Country $country,Lending $lending) {
+    public function __construct(UserModel $user, UserGroup $userGroup, Presenter $presenter, UserLending $userLending, UserExtendRepository $userExtend, Country $country, Lending $lending) {
         $this->userRepository = $user;
         $this->userGroupRepository = $userGroup;
         $this->presenterRepository = $presenter;
@@ -129,7 +127,7 @@ class User extends General {
                 $parentPresent = 0;
 
                 $userID = $userModel->id;
-                $data = $this->presenterRepository->where('user_id',$presenterID)->first();
+                $data = $this->presenterRepository->where('user_id', $presenterID)->first();
                 if ($data) {
                     $parentPresent = $data->id;
                 }
@@ -334,50 +332,10 @@ class User extends General {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user) {
                 $userID = $user->id;
-                $list = $this->presenterRepository->get()->toArray();
-                $result = $this->presenterRepository->showTreePresent($list);
-                $returnData = $this->search($result, 'user_present', $userID,"equal");
-                $returnData = $this->search($returnData, 'user_parent', 0,'not equal');
+                $returnData = $this->presenterRepository->getListReferal($userID);
+                $returnData = $this->search($returnData, 'parent_id', 0, 'not equal');
                 return $this->respondWithData($returnData);
             }
-        } catch (Exception $e) {
-            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getDownlineMember(Request $request) {
-        try {
-            $user_root = $request->get('user_parent');
-            $list = $this->presenterRepository->get()->toArray();
-            $result = $this->presenterRepository->showTreePresent($list);
-            $downlineMember = $this->search($result, 'user_parent', $user_root,"equal");
-            //$ids = [];
-
-            //Foreach downline numbergetListReferal
-//            if($downlineMember){
-//                foreach($downlineMember as $member){
-//                    array_push($ids, $member['user_id']);
-//                }
-//            }
-//
-//            //Calculate Total lending
-//            $userLending = $this->userLendingRepository->whereIn('user_id',$ids)->get();
-//            $lending = 0;
-//            if($userLending){
-//                foreach($userLending as $item){
-//                    $lendingData = $this->lendingRepository->find($item->lending_id);
-//                    $lending += $lendingData->title;
-//                }
-//            }
-
-            $returnData['downlineMember'] = $downlineMember;
-            //$returnData['totalLending'] = $lending;
-
-            return $this->respondWithData($returnData);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
@@ -405,11 +363,11 @@ class User extends General {
     protected function search($array, $key, $value, $condition) {
         $results = array();
         if (is_array($array)) {
-            if($condition == "equal"){
+            if ($condition == "equal") {
                 if (isset($array[$key]) && $array[$key] == $value) {
                     $results[] = $array;
                 }
-            }else{
+            } else {
                 if (isset($array[$key]) && $array[$key] != $value) {
                     $results[] = $array;
                 }

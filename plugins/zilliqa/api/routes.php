@@ -25,7 +25,6 @@ Route::group([
         Route::get('me', 'Zilliqa\Api\Controllers\User@detail')->name('user.detail');
         Route::post('edit', 'Zilliqa\Api\Controllers\User@edit')->name('user.editAccount');
         Route::get('get-list-referal', 'Zilliqa\Api\Controllers\User@getListReferal');
-        Route::post('get-downline-member', 'Zilliqa\Api\Controllers\User@getDownlineMember');
     });
     Route::middleware('Zilliqa\Api\Middleware\JwtMiddleware')->prefix('lending')->group(function () {
         Route::get('/', 'Zilliqa\Api\Controllers\Lending@listAll')->name('lending.list');
