@@ -5,6 +5,8 @@ namespace Zilliqa\Backend\Models;
 use Model;
 use RainLab\User\Models\User;
 use DB;
+use Zilliqa\Backend\Models\UserLending;
+use Zilliqa\Backend\Models\UserLending;
 
 /**
  * Model
@@ -100,26 +102,28 @@ class Presenter extends Model {
 
     function showTreePresent($data, $parent_id = 0, $level = 0) {
         $result = [];
-        foreach ($data as $item) {
-            if ($item['parent_id'] == $parent_id) {
-                $item['level'] = $level;
-                if ($level == 1) {
-                    $this->userRoot = $item['parent_id'];
-                    $this->userParent = $item['parent_id'];
-                }
-                if ($level == 2) {
-                    $this->userRoot = $this->userRoot;
-                    $this->userParent = $item['parent_id'];
-                } else {
-                    if ($this->userRoot > 0)
+        if($data){
+            foreach ($data as $item) {
+                if ($item['parent_id'] == $parent_id) {
+                    $item['level'] = $level;
+                    if ($level == 1) {
+                        $this->userRoot = $item['parent_id'];
+                        $this->userParent = $item['parent_id'];
+                    }
+                    if ($level == 2) {
                         $this->userRoot = $this->userRoot;
+                        $this->userParent = $item['parent_id'];
+                    } else {
+                        if ($this->userRoot > 0)
+                            $this->userRoot = $this->userRoot;
+                    }
+                    $item['user_root'] = $this->userRoot;
+                    $item['user_parent'] = $this->userParent;
+                    $result[] = $item;
+                    //unset($data[$item['id']]);
+                    $child = $this->showTreePresent($data, $item['id'], $level + 1);
+                    $result = array_merge($result, $child);
                 }
-                $item['user_root'] = $this->userRoot;
-                $item['user_parent'] = $this->userParent;
-                $result[] = $item;
-                //unset($data[$item['id']]);
-                $child = $this->showTreePresent($data, $item['id'], $level + 1);
-                $result = array_merge($result, $child);
             }
         }
         return $result;
@@ -128,10 +132,16 @@ class Presenter extends Model {
     public function getListReferal($userID) {
         $data = $this->all()->toNested()->toArray();
         $returnData = $this->search($data, 'user_present', $userID, "equal");
-        
+
         foreach ($returnData as $index => $item) {
             $childrens = $item['children'];
             if ($childrens) {
+                $userID = $childrens[0]['id'];
+                $checkUserLending = UserLending::where('user_id',$userID)->first();
+                if($checkUserLending){
+                    $this->totalMember++;
+                    $this->totalLending += $childrens[0]['business_volume'];
+                }
                 $this->getTreeChildren($childrens);
             }
             $returnData[$index]['totalMember'] = $this->totalMember;
@@ -146,15 +156,19 @@ class Presenter extends Model {
     protected function getTreeChildren($childrens) {
         if ($childrens) {
             foreach ($childrens as $children) {
-                $this->totalMember++;
-                $this->totalLending += $children['business_volume'];               
+                $userID = $children['id'];
+                $checkUserLending = UserLending::where('user_id',$userID)->first();
+                if($checkUserLending){
+                    $this->totalMember++;
+                    $this->totalLending += $children['business_volume'];
+                }
                 $list = $children['children'];
-                $this->getTreeChildren($list);                
+                $this->getTreeChildren($list);
             }
         }
         return true;
     }
-    
+
     protected function search($array, $key, $value, $condition) {
         $results = array();
         if (is_array($array)) {

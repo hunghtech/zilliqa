@@ -225,7 +225,7 @@ class User extends General {
                 $user = $this->userRepository->where('email', $request->get('email'))->first();
                 if ($user) {
                     $reset_password_token = $this->randomString(30);
-                    $user->is_activated = 0;
+                    $user->is_activated = 1;
                     $user->reset_password_code = $reset_password_token;
                     $user->save();
                     $message = $this->sendMailForGot($user, $reset_password_token);

@@ -78,7 +78,7 @@ class HistoryDaily extends Model
             return $query->whereDate('created_at', '<=', $toDate);
         });
 
-        $dailyModel->orderBy('id', 'desc');
+        $dailyModel->orderBy('created_at', 'desc');
 
         $result = $dailyModel->paginate($perPage)->toArray();
 

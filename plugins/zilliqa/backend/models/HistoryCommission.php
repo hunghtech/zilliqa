@@ -78,7 +78,7 @@ class HistoryCommission extends Model
             return $query->whereDate('created_at', '<=', $toDate);
         });
 
-        $commissionModel->orderBy('id', 'desc');
+        $commissionModel->orderBy('created_at', 'desc');
 
         $result = $commissionModel->paginate($perPage)->toArray();
 

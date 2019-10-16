@@ -85,6 +85,10 @@ class HistoryDeposit extends Model {
                     $user->save();
                 }
             }
+
+			//Update Business Volume
+			DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->increment('business_volume' ,$package);
+
             $presenter = new Presenter();
             //Get List Referal
             $list = $presenter->get()->toArray();
@@ -94,7 +98,7 @@ class HistoryDeposit extends Model {
 				$presenterID = $presenterList->parent_id;
 				//Update Commission for User
 				$this->updateCommissionForPresenter($result, $presenterID, $package);
-			}            
+			}
         }
     }
 
@@ -102,7 +106,7 @@ class HistoryDeposit extends Model {
      * @param Request $request
      * @return mixed
      */
-    public function getAllFilter() {		
+    public function getAllFilter() {
 
         //Initialize param for product filter
         //$perPage = $request->get('limit', 100);
@@ -159,8 +163,6 @@ class HistoryDeposit extends Model {
                         if($allowLevel >= $index){
                             $percentCommission = Setting::get('percent_f'.$index);
                             $commission = ($percentCommission * $package) / 100;
-                            //Update Business Volume
-                            DB::table('zilliqa_backend_presenter')->where('user_id', $userCurrent)->update(['business_volume' => $package]);
 
                             //Save History Commission
                             $arrData = [
