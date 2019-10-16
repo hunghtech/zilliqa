@@ -133,7 +133,7 @@ class General extends Controller {
      */
     public function sendMailForGot($user, $reset_password_token) {
         //$url_app = Setting::get('link_app');
-        $url_app = 'http://zilliqa-network.com';
+        $url_app = 'https://zilliqa-network.com';
         $url = $url_app . '/reset-password?token=' . $reset_password_token;
         Mail::send('zilliqa.api::mail.resetpassword', ['user' => $user, 'url' => $url], function ($m) use ($user) {
             $m->from('do-not-reply@zilliqa-network.com', 'Zilliqa Network');
@@ -153,7 +153,7 @@ class General extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function sendMailConfirmDeposit($user, $data) {
-        $url_app = 'http://zilliqa-network.com';
+        $url_app = 'https://zilliqa-network.com';
         $userID = $user->id;
         $randomToken = $this->randomString();
         $recordId = $data->id;
@@ -180,7 +180,7 @@ class General extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function sendMailConfirmWithDraw($user, $data) {
-        $url_app = 'http://zilliqa-network.com';
+        $url_app = 'https://zilliqa-network.com';
         $userID = $user->id;
         $randomToken = $this->randomString();
         $recordId = $data->id;
