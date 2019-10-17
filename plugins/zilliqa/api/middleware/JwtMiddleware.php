@@ -31,7 +31,7 @@ class JwtMiddleware extends BaseMiddleware {
             return $this->respondWithError("Token expired. Please login again!", $e->getStatusCode());
         }
         if (! $user) {
-            return $this->respondWithError("Account does not exist. Please try again!", $e->getStatusCode());
+            return $this->respondWithError("Account does not exist. Please try again!", 401);
         }
         $this->events->fire('tymon.jwt.valid', $user);
 

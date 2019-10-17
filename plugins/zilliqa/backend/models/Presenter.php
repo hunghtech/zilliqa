@@ -6,7 +6,6 @@ use Model;
 use RainLab\User\Models\User;
 use DB;
 use Zilliqa\Backend\Models\UserLending;
-use Zilliqa\Backend\Models\UserLending;
 
 /**
  * Model
@@ -132,23 +131,22 @@ class Presenter extends Model {
     public function getListReferal($userID) {
         $data = $this->all()->toNested()->toArray();
         $returnData = $this->search($data, 'user_present', $userID, "equal");
-
         foreach ($returnData as $index => $item) {
             $childrens = $item['children'];
+            $userID = $item['user_id'];
+            $checkUserLending = UserLending::where('user_id',$userID)->where('status',1)->first();
+            if($checkUserLending){
+                $this->totalMember++;
+                $this->totalLending += $item['business_volume'];
+            }
             if ($childrens) {
-                $userID = $childrens[0]['id'];
-                $checkUserLending = UserLending::where('user_id',$userID)->first();
-                if($checkUserLending){
-                    $this->totalMember++;
-                    $this->totalLending += $childrens[0]['business_volume'];
-                }
                 $this->getTreeChildren($childrens);
             }
             $returnData[$index]['totalMember'] = $this->totalMember;
-            $returnData[$index]['totalLending'] = $this->totalLending + $item['business_volume'];
+            $returnData[$index]['totalLending'] = $this->totalLending;            
+            unset($returnData[$index]['children']);
             $this->totalMember = 0;
             $this->totalLending = 0;
-            unset($returnData[$index]['children']);
         }
         return $returnData;
     }
@@ -156,11 +154,11 @@ class Presenter extends Model {
     protected function getTreeChildren($childrens) {
         if ($childrens) {
             foreach ($childrens as $children) {
-                $userID = $children['id'];
-                $checkUserLending = UserLending::where('user_id',$userID)->first();
-                if($checkUserLending){
+                $userID = $children['user_id'];
+                $checkUserLending = UserLending::where('user_id',$userID)->where('status',1)->first();
+                if($checkUserLending){                    
                     $this->totalMember++;
-                    $this->totalLending += $children['business_volume'];
+                    $this->totalLending += $children['business_volume'];                    
                 }
                 $list = $children['children'];
                 $this->getTreeChildren($list);

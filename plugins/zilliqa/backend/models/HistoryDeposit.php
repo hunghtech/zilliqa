@@ -70,7 +70,7 @@ class HistoryDeposit extends Model {
 
             //Insert user Lending
             $arrData = [
-                'user_id' => $this->user_id, 'lending_id' => $this->lending_id, 'status' => 1,'is_update_lending' => $lending->is_update_lending
+                'user_id' => $this->user_id, 'lending_id' => $this->lending_id, 'status' => 1, 'is_update_lending' => $lending->is_update_lending
             ];
             UserLending::create($arrData);
 
@@ -86,19 +86,19 @@ class HistoryDeposit extends Model {
                 }
             }
 
-			//Update Business Volume
-			DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->increment('business_volume' ,$package);
+            //Update Business Volume
+            DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->increment('business_volume', $package);
 
             $presenter = new Presenter();
             //Get List Referal
             $list = $presenter->get()->toArray();
             $result = $presenter->showTreePresent($list);
             $presenterList = $presenter->where('user_id', $this->user_id)->first();
-			if($presenterList){
-				$presenterID = $presenterList->parent_id;
-				//Update Commission for User
-				$this->updateCommissionForPresenter($result, $presenterID, $package);
-			}
+            if ($presenterList) {
+                $presenterID = $presenterList->parent_id;
+                //Update Commission for User
+                $this->updateCommissionForPresenter($result, $presenterID, $package);
+            }
         }
     }
 
@@ -110,7 +110,7 @@ class HistoryDeposit extends Model {
 
         //Initialize param for product filter
         //$perPage = $request->get('limit', 100);
-		$perPage = 100;
+        $perPage = 100;
 
         $user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
@@ -148,20 +148,19 @@ class HistoryDeposit extends Model {
      * @param Request $request
      * @return mixed
      */
-    protected function updateCommissionForPresenter($data, $presenterID, $package){
+    protected function updateCommissionForPresenter($data, $presenterID, $package) {
         $userCurrent = $this->user_id;
-        for($index = 1; $index < 6; $index++)
-        {
+        for ($index = 1; $index < 6; $index++) {
             $referral = $this->search($data, 'user_id', $userCurrent);
-            if(count($referral) > 0){
-                if($userCurrent != $referral[0]['user_present']){
+            if (count($referral) > 0) {
+                if ($userCurrent != $referral[0]['user_present']) {
                     $userCurrent = $referral[0]['user_present'];
                     //Status Lending
-                    $statusLending = UserLending::where('user_id',$userCurrent)->where('status',1)->first();
-                    if($statusLending){
+                    $statusLending = UserLending::where('user_id', $userCurrent)->where('status', 1)->first();
+                    if ($statusLending) {
                         $allowLevel = Presenter::getReferralLevel($userCurrent);
-                        if($allowLevel >= $index){
-                            $percentCommission = Setting::get('percent_f'.$index);
+                        if ($allowLevel >= $index) {
+                            $percentCommission = Setting::get('percent_f' . $index);
                             $commission = ($percentCommission * $package) / 100;
 
                             //Save History Commission
@@ -171,12 +170,11 @@ class HistoryDeposit extends Model {
                             HistoryCommission::create($arrData);
                         }
                     }
-                }
-                else
+                } else
                     return true;
-            }
-            else
+            } else
                 return true;
         }
     }
+
 }
