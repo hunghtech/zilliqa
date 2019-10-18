@@ -62,8 +62,7 @@ class HistoryDeposit extends Model {
     }
 
     public function afterSave() {
-        if ($this->status == 2 && (!$this->is_active_lending || $this->is_active_lending == 0)) {
-            echo 1;die;
+        if ($this->status == 2 && (!$this->is_active_lending || $this->is_active_lending == 0)) {            
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
             $package = $lending->title;
