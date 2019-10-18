@@ -62,7 +62,8 @@ class HistoryDeposit extends Model {
     }
 
     public function afterSave() {
-        if ($this->status == 2) {
+        if ($this->status == 2 && (!$this->is_active_lending || $this->is_active_lending == 0)) {
+            echo 1;die;
             //Check Lending Package
             $lending = Lending::find($this->lending_id);
             $package = $lending->title;
@@ -85,6 +86,9 @@ class HistoryDeposit extends Model {
                     $user->save();
                 }
             }
+            
+            //Update Active Lending            
+            DB::table('zilliqa_backend_history_deposit')->where('id', $this->id)->update(['is_active_lending' => 1]);            
 
             //Update Business Volume
             DB::table('zilliqa_backend_presenter')->where('user_id', $this->user_id)->increment('business_volume', $package);

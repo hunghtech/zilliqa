@@ -21,7 +21,7 @@ fields:
     amount:
         label: Amount
         span: auto
-        type: text
+        type: text    
     status:
         label: Status
         showSearch: true
@@ -36,3 +36,7 @@ fields:
         mode: datetime
         span: auto
         type: datepicker
+    is_active_lending:
+        label: Active Lending
+        span: auto
+        type: switch        
