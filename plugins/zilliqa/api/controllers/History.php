@@ -182,11 +182,13 @@ class History extends General {
             $historyId = $request->get('history_id');
             $deposit = $this->depositRepository->find($historyId);
             if ($deposit) {
-                $deposit->status = 1;
-                $deposit->save();
-                $userID = $deposit->user_id;
-                $user = $this->userRepository->find($userID);
-                $this->sendMailAdminActiveDeposit($user, $deposit);
+                if($deposit->status == 0){
+                    $deposit->status = 1;
+                    $deposit->save();
+                    $userID = $deposit->user_id;
+                    $user = $this->userRepository->find($userID);
+                    $this->sendMailAdminActiveDeposit($user, $deposit);
+                }
                 return $this->respondWithData($deposit);
             }
         } catch (\Exception $e) {
@@ -203,11 +205,13 @@ class History extends General {
             $historyId = $request->get('history_id');
             $withDraw = $this->withDrawRepository->find($historyId);
             if ($withDraw) {
-                $withDraw->status = 1;
-                $withDraw->save();
-                $userID = $withDraw->user_id;
-                $user = $this->userRepository->find($userID);
-                $this->sendMailAdminActiveWithDraw($user, $withDraw);
+                if($withDraw->status == 0){
+                    $withDraw->status = 1;
+                    $withDraw->save();
+                    $userID = $withDraw->user_id;
+                    $user = $this->userRepository->find($userID);
+                    $this->sendMailAdminActiveWithDraw($user, $withDraw);
+                }
                 return $this->respondWithData($withDraw);
             }
         } catch (\Exception $e) {
