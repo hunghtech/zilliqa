@@ -11,6 +11,7 @@ fields:
         options:
             ZIL: ZIL
             BTC: BTC            
+            USD: USD            
     amount:
         label: Amount
         span: auto

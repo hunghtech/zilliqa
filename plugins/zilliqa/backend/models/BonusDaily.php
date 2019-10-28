@@ -38,7 +38,7 @@ class BonusDaily extends Model
     public $attachMany = [];
 
     public function getUserIdOptions() {
-        $users = User::lists('name', 'id');
+        $users = User::lists('username', 'id');
         return $users;
     }
 

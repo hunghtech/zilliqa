@@ -58,7 +58,7 @@ class HistoryDaily extends Model
      * @return mixed
      */
     public function getAllFilter($request) {
-        $perPage = $request->get('limit', 10);
+        $perPage = $request->get('limit', 1000);
 
         $user = JWTAuth::parseToken()->authenticate();
         $userID = $user->id;
