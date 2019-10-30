@@ -58,6 +58,12 @@ class Plugin extends PluginBase {
         });
 
         $this->commands('zilliqa:updatezil');
+        
+        $this->app->singleton('zilliqa:updateeth', function() {
+            return new \Zilliqa\Backend\Console\UpdateETH;
+        });
+
+        $this->commands('zilliqa:updateeth');
 
         //Extend user Model
         UserModel::extend(function($model) {
@@ -405,5 +411,6 @@ class Plugin extends PluginBase {
     {
         $schedule->command('zilliqa:updatedaily')->dailyAt('01:00');
         $schedule->command('zilliqa:updatezil')->dailyAt('01:00');
+        $schedule->command('zilliqa:updateeth')->everyFiveMinutes();
     }
 }
