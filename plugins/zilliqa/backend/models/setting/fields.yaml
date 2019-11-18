@@ -9,6 +9,12 @@ tabs:
             span: auto
             tab: Config
             required: true
+        percent_eth:
+            label: Percent ETH
+            type: text
+            span: auto
+            tab: Config
+            required: true
         percent_f1:
             label: Percent F1
             type: text

@@ -71,6 +71,20 @@ class Lending extends General {
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function getPercentETH() {
+        try {
+            $data = Setting::get('percent_eth');
+
+            return $this->respondWithData($data);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function checkLendingStatus() {
         try {
             $user = JWTAuth::parseToken()->authenticate();
