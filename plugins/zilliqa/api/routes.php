@@ -47,5 +47,6 @@ Route::group([
         Route::get('/subscription', 'Zilliqa\Api\Controllers\Lending@subscription')->name('business.subscription');
         Route::get('/price-eth', 'Zilliqa\Api\Controllers\Lending@getPriceETH')->name('business.getPriceETH');
         Route::get('/percent-eth', 'Zilliqa\Api\Controllers\Lending@getPercentETH')->name('business.getPercentETH');
+        Route::get('/info-popup', 'Zilliqa\Api\Controllers\Lending@infoPopup')->name('business.infoPopup');
     });
 });

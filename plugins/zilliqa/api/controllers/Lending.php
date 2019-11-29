@@ -97,5 +97,25 @@ class Lending extends General {
             return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
         }
     }
+    
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function infoPopup() {
+        try {
+            $data = "";
+            $statusPopup = Setting::get('status_popup');            
+            if($statusPopup && $statusPopup == 1){
+                $titlePopup = Setting::get('title_popup');                
+                $contentPopup = Setting::get('content_popup'); 
+                $data['title'] = $titlePopup;
+                $data['content'] = $contentPopup;
+            }
+            return $this->respondWithData($data);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), \Illuminate\Http\Response::HTTP_NOT_FOUND);
+        }
+    }
 
 }

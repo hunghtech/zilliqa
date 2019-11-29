@@ -44,4 +44,20 @@ tabs:
             type: text
             span: auto
             tab: Commission
-            required: true            
+            required: true
+        status_popup:
+            label: Status Popup
+            type: switch
+            span: auto
+            tab: Information Popup
+        title_popup:
+            label: Title Popup
+            type: text
+            span: auto
+            tab: Title Popup
+        content_popup:
+            label: Content Popup
+            type: richeditor
+            size: huge
+            span: auto
+            tab: Information Popup
