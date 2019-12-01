@@ -54,7 +54,7 @@ tabs:
             label: Title Popup
             type: text
             span: auto
-            tab: Title Popup
+            tab: Information Popup
         content_popup:
             label: Content Popup
             type: richeditor

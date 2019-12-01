@@ -109,8 +109,11 @@ class Lending extends General {
             if($statusPopup && $statusPopup == 1){
                 $titlePopup = Setting::get('title_popup');                
                 $contentPopup = Setting::get('content_popup'); 
+				$statusPopup = Setting::get('status_popup'); 
+				
                 $data['title'] = $titlePopup;
                 $data['content'] = $contentPopup;
+				$data['status_popup'] = $statusPopup;
             }
             return $this->respondWithData($data);
         } catch (Exception $e) {
