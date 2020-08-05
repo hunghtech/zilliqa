@@ -63,12 +63,12 @@
             "version": "v0.11.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/barryvdh/laravel-cors.git",
+                "url": "https://github.com/fruitcake/laravel-cors.git",
                 "reference": "03492f1a3bc74a05de23f93b94ac7cc5c173eec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-cors/zipball/03492f1a3bc74a05de23f93b94ac7cc5c173eec9",
+                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/03492f1a3bc74a05de23f93b94ac7cc5c173eec9",
                 "reference": "03492f1a3bc74a05de23f93b94ac7cc5c173eec9",
                 "shasum": ""
             },
@@ -122,28 +122,31 @@
         },
         {
             "name": "composer/installers",
-            "version": "v1.7.0",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "141b272484481432cda342727a427dc1e206bfa0"
+                "reference": "b93bcf0fa1fccb0b7d176b0967d969691cd74cca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/141b272484481432cda342727a427dc1e206bfa0",
-                "reference": "141b272484481432cda342727a427dc1e206bfa0",
+                "url": "https://api.github.com/repos/composer/installers/zipball/b93bcf0fa1fccb0b7d176b0967d969691cd74cca",
+                "reference": "b93bcf0fa1fccb0b7d176b0967d969691cd74cca",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "composer-plugin-api": "^1.0 || ^2.0"
             },
             "replace": {
                 "roundcube/plugin-installer": "*",
                 "shama/baton": "*"
             },
             "require-dev": {
-                "composer/composer": "1.0.*@dev",
-                "phpunit/phpunit": "^4.8.36"
+                "composer/composer": "1.6.* || 2.0.*@dev",
+                "composer/semver": "1.0.* || 2.0.*@dev",
+                "phpunit/phpunit": "^4.8.36",
+                "sebastian/comparator": "^1.2.4",
+                "symfony/process": "^2.3"
             },
             "type": "composer-plugin",
             "extra": {
@@ -179,6 +182,7 @@
                 "Kanboard",
                 "Lan Management System",
                 "MODX Evo",
+                "MantisBT",
                 "Mautic",
                 "Maya",
                 "OXID",
@@ -233,6 +237,7 @@
                 "shopware",
                 "silverstripe",
                 "sydes",
+                "sylius",
                 "symfony",
                 "typo3",
                 "wordpress",
@@ -240,7 +245,17 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2019-08-12T15:00:31+00:00"
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-04-07T06:57:05+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -939,6 +954,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -985,6 +1001,7 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
@@ -1423,6 +1440,7 @@
                 "scss",
                 "stylesheet"
             ],
+            "abandoned": "scssphp/scssphp",
             "time": "2019-06-18T21:15:44+00:00"
         },
         {
@@ -1596,18 +1614,18 @@
             "authors": [
                 {
                     "name": "Joost Faassen",
-                    "role": "Packaging for Composer",
-                    "email": "j.faassen@linkorb.com"
+                    "email": "j.faassen@linkorb.com",
+                    "role": "Packaging for Composer"
                 },
                 {
                     "name": "Ryan Grove",
-                    "role": "PHP port",
-                    "email": "ryan@wonko.com"
+                    "email": "ryan@wonko.com",
+                    "role": "PHP port"
                 },
                 {
                     "name": "Adam Gofort",
-                    "role": "Updates to the PHP port",
-                    "email": "aag@adamgoforth.com"
+                    "email": "aag@adamgoforth.com",
+                    "role": "Updates to the PHP port"
                 },
                 {
                     "name": "Douglas Crockford",
@@ -1743,6 +1761,7 @@
                 "cron",
                 "schedule"
             ],
+            "abandoned": "dragonmantank/cron-expression",
             "time": "2017-01-23T04:29:33+00:00"
         },
         {
@@ -1859,16 +1878,16 @@
         },
         {
             "name": "october/backend",
-            "version": "v1.0.459",
+            "version": "v1.0.467",
             "source": {
                 "type": "git",
                 "url": "https://github.com/octoberrain/backend.git",
-                "reference": "52eeead1cafde204da687e119ea33ef18abffbe8"
+                "reference": "19611b5e27769636621c85180c842901552ac6a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octoberrain/backend/zipball/52eeead1cafde204da687e119ea33ef18abffbe8",
-                "reference": "52eeead1cafde204da687e119ea33ef18abffbe8",
+                "url": "https://api.github.com/repos/octoberrain/backend/zipball/19611b5e27769636621c85180c842901552ac6a9",
+                "reference": "19611b5e27769636621c85180c842901552ac6a9",
                 "shasum": ""
             },
             "require": {
@@ -1914,7 +1933,7 @@
                 "october",
                 "october cms"
             ],
-            "time": "2019-09-10T18:21:51+00:00"
+            "time": "2020-06-24T17:33:44+00:00"
         },
         {
             "name": "october/cms",
@@ -1922,12 +1941,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/octoberrain/cms.git",
-                "reference": "b5be58ba2ac8ec818c464985b2fd56671d5225ec"
+                "reference": "0ac36d6ff8907b2e6e729ba89bebe53e33cd90fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octoberrain/cms/zipball/b5be58ba2ac8ec818c464985b2fd56671d5225ec",
-                "reference": "b5be58ba2ac8ec818c464985b2fd56671d5225ec",
+                "url": "https://api.github.com/repos/octoberrain/cms/zipball/0ac36d6ff8907b2e6e729ba89bebe53e33cd90fb",
+                "reference": "0ac36d6ff8907b2e6e729ba89bebe53e33cd90fb",
                 "shasum": ""
             },
             "require": {
@@ -2080,12 +2099,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/octoberrain/system.git",
-                "reference": "8e0c27b9f8ade600989c7232fb363c84f9438f1a"
+                "reference": "c8bbdf81fa9fa80f9f7cb0f43f37909df3c6ed68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octoberrain/system/zipball/8e0c27b9f8ade600989c7232fb363c84f9438f1a",
-                "reference": "8e0c27b9f8ade600989c7232fb363c84f9438f1a",
+                "url": "https://api.github.com/repos/octoberrain/system/zipball/c8bbdf81fa9fa80f9f7cb0f43f37909df3c6ed68",
+                "reference": "c8bbdf81fa9fa80f9f7cb0f43f37909df3c6ed68",
                 "shasum": ""
             },
             "require": {
@@ -2193,6 +2212,7 @@
                 "php",
                 "stylesheet"
             ],
+            "abandoned": true,
             "time": "2017-03-28T22:19:25+00:00"
         },
         {
@@ -2518,17 +2538,17 @@
             ],
             "authors": [
                 {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                },
+                {
                     "name": "Marijn Huizendveld",
                     "email": "marijn.huizendveld@gmail.com"
                 },
                 {
                     "name": "Thibaud Fabre",
                     "email": "thibaud@aztech.io"
-                },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
                 }
             ],
             "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
@@ -4005,6 +4025,7 @@
             ],
             "description": "This tool check syntax of PHP files about 20x faster than serial check.",
             "homepage": "https://github.com/JakubOnderka/PHP-Parallel-Lint",
+            "abandoned": "php-parallel-lint/php-parallel-lint",
             "time": "2018-02-24T15:31:20+00:00"
         },
         {
@@ -5577,5 +5598,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.0"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }
